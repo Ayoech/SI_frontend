@@ -1,0 +1,259 @@
+.header {
+  margin-left: 0px;
+  margin-top: 0px;
+  display: flex;
+  justify-content: left;
+  height: 650px;
+  width: 55%;
+  background-color: rgb(13, 42, 32);
+
+}
+.icon-container {
+  position: absolute; /* Position the icon absolutely inside the container */
+  top: 20px; /* Distance from the top */
+  right: 20px; /* Distance from the right */
+}
+.right{
+  height: 650px;
+  width: 45%;
+  background-color: rgb(20, 230, 230);
+  color: white;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+}
+.container {
+  margin-top: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  display: flex;
+  justify-content: space-between;
+
+}
+li {
+  list-style: none;
+}
+.big{
+  color: white;
+  margin-top: 150px;
+  font-size: 4rem;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+}
+.small {
+  color: white;
+  font-size: 1.3rem;
+  font-family:'Courier New', Courier, monospace;
+  margin-top: 400px;
+  margin-left: -670px;
+
+}
+.desc {
+  display: flex;
+}
+.back{
+  display: flex;
+  justify-content: center;
+  margin-right: 500px;
+  margin-left: 100px;
+}
+.login-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  text-align: center;
+}
+
+.form-wrapper h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.input-box {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.input-box label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.login-btn {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  background-color: tomato;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color:rgb(154, 54, 36);
+}
+#log {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, rgb(13, 42, 32), rgb(20,239,230));
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1e293b;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-links li {
+  margin: 10px 0;
+}
+
+.sidebar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.sidebar-links a:hover {
+  color: #3b82f6;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  margin: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-content h1 {
+  font-size: 2rem;
+  color: #1f2937;
+}
+
+.main-content p {
+  color: #4b5563;
+  font-size: 1rem;
+}
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 260px 1fr 1fr 1fr;
+  grid-template-rows: 0.2fr 3fr;
+  grid-template-areas:
+    'sidebar header header header'
+    'sidebar main main main';
+  height: 100vh;
+}
+
+/* Header  */
+.header1 {
+  grid-area: header;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px 0 30px;
+  box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+}
+
+.menu-icon {
+  display: none;
+}
+/* End Header  */
+
+/* Sidebar  */
+#sidebar {
+  grid-area: sidebar;
+  height: 100%;
+  background-color: white;
+  overflow-y: auto;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+.sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px 0px 30px;
+  margin-bottom: 30px;
+}
+
+.sidebar-title > span {
+  display: none;
+}
+
+.sidebar-brand {
+ /* margin-top: 15px;*/
+  margin-top: 0px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.sidebar-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.sidebar-list-item {
+  padding: 20px 20px 20px 20px;
+  font-size: 20px;
+}
+
+.sidebar-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.sidebar-list-item > a {
+  text-decoration: none;
+  color: #9e9ea4;
+}
+
+.sidebar-responsive {
+  display: inline !important;
+  position: absolute;
+  /*
+    we want the z-index of the sidebar higher so that
+    the charts are not showing over the sidebar 
+    on small screens
+  */
+  z-index: 12 !important;
+}
+
