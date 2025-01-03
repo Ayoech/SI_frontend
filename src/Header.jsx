@@ -12,10 +12,10 @@ function Header({OpenSidebar}) {
         <div className='header-left'>
             <BsSearch  className='icon'/>
         </div>
-        <div className='header-right'>
-            <BsFillBellFill className='icon'/>
-            <BsFillEnvelopeFill className='icon'/>
-            <BsPersonCircle className='icon'/>
+        <div className='header-right flex justify-between'>
+            <BsFillBellFill className='icon mr-4'/>
+            <BsFillEnvelopeFill className='icon mr-4'/>
+            <BsPersonCircle className='icon mr-4'/>
         </div>
     </header>
   )

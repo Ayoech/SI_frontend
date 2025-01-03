@@ -1,12 +1,11 @@
 import React from 'react'
-import './App.css'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Homy from './Homy'
 import { useState } from 'react'
 
 export default function Dashboard() {
-const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
+const [openSidebarToggle, setOpenSidebarToggle] = useState(true)
 
 const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle)

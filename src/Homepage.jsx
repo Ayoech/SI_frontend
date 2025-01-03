@@ -6,17 +6,15 @@ import slider from '/slider-img.png'
 import { CiMenuFries } from "react-icons/ci";
 import ima from '/ez.jpg'
 
-import './App.css'
-
 function Home() {
   const [count, setCount] = useState(0)
 
   return (
     <>
     
-      <div className= 'container'>
-        <div className='header' >
-          <img src={logo} className="logo" alt="" height = "50px" width="50px" style={{marginRight: "2px", marginTop:"10px"}}/>
+      <div className= 'my-container'>
+        <div className='my-header flex' >
+          <img src={logo} className="logo" alt="" style={{marginRight: "2px", marginTop:"10px",height:'60px',width:'60px'}}/>
           <b style={{color: "white", fontFamily: "Arial, Helvetica, sans-serif", marginTop: "20px", fontSize: "1.8rem"}}>ENSIAS</b>
           <div className='big'>You Can <br></br> Post Internship Opportunities Here</div>
           <div className='small'>Unlock a pool of talented, motivated interns  ready to contribute to your company’s success <br />  <br />  <Link to="/signin"><button style={{backgroundColor: 'Tomato', color: 'white', fontSize: '1.3rem', padding: '1.1rem'}}>Sign in</button></Link> </div>

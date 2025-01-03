@@ -7,8 +7,7 @@ import {
 import { PiStudent } from "react-icons/pi";
 import { FaTachometerAlt, FaComment, FaTasks } from 'react-icons/fa';
 import { Link, useParams } from 'react-router-dom';
-import { TbFileUpload } from "react-icons/tb";
-import logo from '/logo.png';
+import { TbFileUpload, TbUser  } from "react-icons/tb";
 
 
 
@@ -28,34 +27,42 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
       </div>
 
       <ul className='sidebar-list'>
-        <li className='sidebar-list-item' style={{color: 'grey'}}>
+        <li className='sidebar-list-item flex items-center' style={{color: 'grey'}}>
          
-            <BsGrid1X2Fill className='icon' /> Dashboard
+            <BsGrid1X2Fill className='icon mr-2' /> Dashboard
          
         </li>
-        <li className='sidebar-list-item' style={{color: 'grey'}}>
-          <Link to={`/gettasks/${email.email}`}>
-            <FaTasks className='icon' /> Resume
+        <li className='sidebar-list-item ' style={{color: 'grey'}}>
+          <Link to={`/gettasks/${email.email}`} className="flex items-center">
+            <FaTasks className='icon mr-2' /> Resume
           </Link>
         </li>
         <li className='sidebar-list-item' style={{color: 'black'}}>
          
-            <Link to="/progress">
-            <FaClipboardList  className='icon' /> Offers
+            <Link to="/student/offres" className="flex items-center">
+            <FaClipboardList  className='icon mr-2' /> Offers
             </Link>
           
         </li>
         <li className='sidebar-list-item' style={{color: 'black'}}>
           
-          <Link to={`/assignedFeedback/${email.email}`}>
-            <FaComment className='icon' /> Feedback
+          <Link to={`/assignedFeedback/${email.email}`} className="flex items-center">
+            <FaComment className='icon mr-2' /> Feedback
           </Link>
           
         </li>
-        <li className='sidebar-list-item' style={{color: 'grey'}}>
+        <li className='sidebar-list-item ' style={{color: 'grey'}} >
           
-          <Link to ={`/files/${email.email}`}>
-          <TbFileUpload className='icon'/> Files
+          <Link to ={`/files/${email.email}`} className="flex items-center">
+          <TbFileUpload className='icon mr-2'/> Files
+          
+          </Link>
+          
+        </li>
+        <li className='sidebar-list-item ' style={{color: 'grey'}}>
+          
+          <Link to ={`/student/Profile`} className="flex items-center">
+          <TbUser className="icon mr-2" /> Profile
           
           </Link>
           
