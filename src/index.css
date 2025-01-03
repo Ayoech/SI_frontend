@@ -338,3 +338,8 @@ li {
   grid-area: right;
   height: 100%;
 }
+
+.listePostulation{
+  grid-area: right;
+  margin-right: 50px;
+}

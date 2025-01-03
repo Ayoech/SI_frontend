@@ -32,17 +32,18 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
             <BsGrid1X2Fill className='icon mr-2' /> Dashboard
          
         </li>
-        <li className='sidebar-list-item ' style={{color: 'grey'}}>
-          <Link to={`/gettasks/${email.email}`} className="flex items-center">
-            <FaTasks className='icon mr-2' /> Resume
-          </Link>
-        </li>
+       
         <li className='sidebar-list-item' style={{color: 'black'}}>
          
             <Link to="/student/offres" className="flex items-center">
             <FaClipboardList  className='icon mr-2' /> Offers
             </Link>
           
+        </li>
+        <li className='sidebar-list-item ' style={{color: 'grey'}}>
+          <Link to={`/student/postulations`} className="flex items-center">
+            <FaTasks className='icon mr-2' /> Postulations
+          </Link>
         </li>
         <li className='sidebar-list-item' style={{color: 'black'}}>
           

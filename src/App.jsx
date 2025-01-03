@@ -5,6 +5,7 @@ import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
 import Profile from './pages/student/Profile.jsx';
 import Offres from './pages/student/Offres.jsx';
+import Postulations from './pages/student/Postulations.jsx';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dash" element={<Dashboard />} />
         <Route path='/student/Profile' element={<Profile />} />
         <Route path='/student/Offres' element={<Offres />} />
+        <Route path='/student/postulations' element={<Postulations />} />
       </Routes>
     </Router>
   );
