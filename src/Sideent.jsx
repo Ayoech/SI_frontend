@@ -18,7 +18,7 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
   console.log("Email value in Sidebar:", email.email);
 
   return (
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""}>
+    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""} style={{height: '1000px'}}>
       <div className='sidebar-title'>
         <div className='sidebar-brand'>
        
