@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LoginService } from './Services/LoginService';
 
 
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginData, setLoginData] = useState({
+    "email": "",
+    "password": ""
+  });
+  const [loginresponseData, setLoginresponseData] = useState("");
   const navigate = useNavigate();
   
   const inputStyle = {
@@ -40,21 +44,53 @@ function Login() {
     }
   }*/
 
+    const handleLogin = async(e)=>{
+      e.preventDefault(); 
+      try{
+        const response = await LoginService(loginData);
+        console.log(response);
+        const user = JSON.parse(localStorage.getItem('user')); // Retrieve decoded user data
+        const token = localStorage.getItem('token');
+            if (response.data.message === "invalid username or password") {
+                setLoginresponseData(response.data.message);
+                
+            } else {
+                console.log('Welcome');
+                const role = user.role; 
+                if (role === 'A_ECOLE') {
+                    navigate('/ecole/etudiants');
+                } else if (role === 'A_ENTREPRISE') {
+                    navigate('/entreprise');
+                } else if(role === 'ETUDIANT'){
+                    navigate('/student/Profile');
+                }
+                else if(role === 'G_ENTREPRISE'){
+                  navigate('/entreprise');
+              }
+                else {
+                    console.error('Unknown role:', role);
+                }
+            }
+        } catch (error) {
+              console.log(error);
+    }
+  }
+
   return (
-    <body id='log'>
-    <div class="login-container">
-    <div class="form-wrapper">
+    <div id='log'>
+    <div className="login-container">
+    <div className="form-wrapper">
       <h2>Login</h2>
       <form action="#" method="post">
-        <div class="input-box">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <div className="input-box">
+          <label for="username">Email</label>
+          <input type="text" id="email" name="email" value={loginData.email} onChange={(e) => {setLoginData({ ...loginData, email: e.target.value }) }} placeholder="Enter your email" required />
         </div>
         <div class="input-box">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter your password" required />
+          <input type="password" id="password" value={loginData.password} onChange={(e) => {setLoginData({ ...loginData, password: e.target.value }) }} name="password" placeholder="Enter your password" required />
         </div>
-        <button type="submit" class="login-btn">Login</button>
+        <button type="submit" className="login-btn" onClick={handleLogin}>Login</button>
       </form>
       <div class="links">
         <a href="#">Forgot Password?</a>
@@ -62,7 +98,7 @@ function Login() {
       </div>
     </div>
   </div>
-  </body>
+  </div>
     
   
   );

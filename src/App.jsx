@@ -11,7 +11,10 @@ import Postulations from './pages/student/Postulations.jsx';
 import Applicants from './pages/entreprise/Applicants.jsx';
 import CreateOffer from './pages/entreprise/CreateOffer.jsx';
 import CreateInternalAccount from './pages/entreprise/CreateInternalAccount.jsx';
-import CreateStudent from './pages/Ecole/CreateStudent.jsx';
+import CreateStudent from './components/ecole/FormeEtudiant.jsx';
+import Etudiant from './pages/Ecole/Etudiant.jsx';
+import Conventions from './pages/Ecole/Conventions.jsx';
+import Entreprise from './pages/Ecole/Entreprise.jsx';
 
 function App() {
   return (
@@ -28,8 +31,9 @@ function App() {
         <Route path='/entreprise/create' element={<CreateOffer />} />
         <Route path='/entreprise/interne' element={<CreateInternalAccount />} />
         <Route path='/ecole' element={<Dasheco />} />
-        <Route path='/ecole/sign' element={<CreateStudent />} />
-        
+        <Route path='/ecole/etudiants' element={<Etudiant />} />
+        <Route path='/ecole/conventions' element={<Conventions />} />
+        <Route path='/ecole/entreprises' element={<Entreprise />} />
       </Routes>
     </Router>
   );
