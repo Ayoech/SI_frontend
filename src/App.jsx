@@ -12,6 +12,7 @@ import Applicants from './pages/entreprise/Applicants.jsx';
 import CreateOffer from './pages/entreprise/CreateOffer.jsx';
 import CreateInternalAccount from './pages/entreprise/CreateInternalAccount.jsx';
 import CreateStudent from './pages/Ecole/CreateStudent.jsx';
+import ManageOffers from './pages/entreprise/ManageOffers.jsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='/student/Applications' element={<Applicants />} />
         <Route path='/entreprise/create' element={<CreateOffer />} />
         <Route path='/entreprise/interne' element={<CreateInternalAccount />} />
+        <Route path='/entreprise/edit' element={<ManageOffers />} />
         <Route path='/ecole' element={<Dasheco />} />
         <Route path='/ecole/sign' element={<CreateStudent />} />
         

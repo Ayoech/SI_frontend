@@ -41,7 +41,7 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
           
         </li>
         <li className='sidebar-list-item ' style={{color: 'grey'}}>
-          <Link to={`/student/postulations`} className="flex items-center">
+          <Link to={`/entreprise/edit`} className="flex items-center">
             <FaTasks className='icon mr-2' /> View offers
           </Link>
         </li>
