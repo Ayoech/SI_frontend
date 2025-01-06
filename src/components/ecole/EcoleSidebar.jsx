@@ -47,8 +47,8 @@ function EcoleSidebar({ openSidebarToggle, OpenSidebar }) {
         </li>
         <li className='sidebar-list-item' style={{color: 'black'}}>
           
-          <Link to={`/assignedFeedback/${email.email}`} className="flex items-center">
-            <FaComment className='icon mr-2' /> Feedback
+          <Link to={'/ecole/statistics'} className="flex items-center">
+            <FaComment className='icon mr-2' /> Statistics
           </Link>
           
         </li>

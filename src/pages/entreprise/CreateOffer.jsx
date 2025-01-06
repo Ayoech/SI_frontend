@@ -43,7 +43,7 @@ const CreateOffer = () => {
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div className={`flex justify-center items-start   ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}>
-        <div className='bg-white shadow-lg rounded-lg p-24  max-w-6xl'>
+        <div className=' rounded-lg p-24  max-w-6xl'>
           <form onSubmit={handleSubmit}>
             <div className='mb-4'>
               <label htmlFor='description' className='block font-medium' style={{width: '200px', paddinTop: '0px'}} >Description</label>
@@ -53,7 +53,7 @@ const CreateOffer = () => {
                 id='description'
                 value={offerData.description}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-4'>
@@ -64,7 +64,7 @@ const CreateOffer = () => {
                 id='domaine'
                 value={offerData.domaine}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-4'>
@@ -75,7 +75,7 @@ const CreateOffer = () => {
                 id='date_debut'
                 value={offerData.date_debut}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-4'>
@@ -86,7 +86,7 @@ const CreateOffer = () => {
                 id='date_fin'
                 value={offerData.date_fin}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-4'>
@@ -97,7 +97,7 @@ const CreateOffer = () => {
                 id='num_entreprise'
                 value={offerData.num_entreprise}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-4'>
@@ -108,7 +108,7 @@ const CreateOffer = () => {
                 id='num_professeur'
                 value={offerData.num_professeur}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
             <div className='mb-2'>
@@ -119,10 +119,10 @@ const CreateOffer = () => {
                 id='num_tuteur'
                 value={offerData.num_tuteur}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '200px'}}
+                className='mt-1 p-2 w-full border border-gray-300 rounded' style={{width: '400px'}}
               />
             </div>
-            <div className="flex justify-center" style={{width: '200px'}}>
+            <div className="flex justify-center mt-12" style={{width: '400px'}}>
             <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
               Create Offer
             </button>

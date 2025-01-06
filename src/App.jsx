@@ -15,6 +15,8 @@ import Etudiant from './pages/Ecole/Etudiant.jsx';
 import Conventions from './pages/Ecole/Conventions.jsx';
 import Entreprise from './pages/Ecole/Entreprise.jsx';
 import ManageOffers from './pages/entreprise/ManageOffers.jsx';
+import Gestionnaire from './pages/entreprise/Gestionnaire.jsx';
+import Statistics from './components/ecole/Statistics.jsx';
 
 function App() {
   return (
@@ -35,6 +37,9 @@ function App() {
         <Route path='/ecole/etudiants' element={<Etudiant />} />
         <Route path='/ecole/conventions' element={<Conventions />} />
         <Route path='/ecole/entreprises' element={<Entreprise />} />
+        <Route path='/entreprise/gestform' element={<Gestionnaire />} />
+        <Route path='/ecole/statistics' element={<Statistics />} />
+        
       </Routes>
     </Router>
   );
