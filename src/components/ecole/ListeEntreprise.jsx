@@ -294,7 +294,7 @@ export default function ListeEntreprise({entreprises}) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={entreprises.length}
             />
             <TableBody>
   {visibleRows.map((row, index) => {
@@ -348,7 +348,7 @@ export default function ListeEntreprise({entreprises}) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={entreprises.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

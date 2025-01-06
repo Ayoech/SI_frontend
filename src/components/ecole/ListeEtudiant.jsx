@@ -32,13 +32,7 @@ function createData(cne,nom,prenom,email, statut) {
   };
 }
 
-const rows = [
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', 'Recherche'),
-];
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -198,9 +192,9 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ListeEtudiant({etudiants}) {
+export default function ListeEtudiant({ etudiants }) {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState(0); // Default to the first column
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -214,19 +208,19 @@ export default function ListeEtudiant({etudiants}) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = etudiants.map((n) => n.id);
+      const newSelected = etudiants.map((n, index) => index); // Use index for selection
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
+  const handleClick = (event, index) => {
+    const selectedIndex = selected.indexOf(index);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, index);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -234,7 +228,7 @@ export default function ListeEtudiant({etudiants}) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
     setSelected(newSelected);
@@ -262,7 +256,7 @@ export default function ListeEtudiant({etudiants}) {
       [...etudiants]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, etudiants]
   );
 
   return (
@@ -281,60 +275,58 @@ export default function ListeEtudiant({etudiants}) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={etudiants.length}
             />
             <TableBody>
-  {visibleRows.map((row, index) => {
-    const isItemSelected = selected.includes(row.id);
-    const labelId = `enhanced-table-checkbox-${index}`;
+              {visibleRows.map((row, index) => {
+                const isItemSelected = selected.includes(index);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-    return (
-      <TableRow
-        hover
-        onClick={(event) => handleClick(event, row.id)}
-        role="checkbox"
-        aria-checked={isItemSelected}
-        tabIndex={-1}
-        key={row.id}
-        selected={isItemSelected}
-        sx={{ cursor: 'pointer' }}
-      >
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            checked={isItemSelected}
-            inputProps={{
-              'aria-labelledby': labelId,
-            }}
-          />
-        </TableCell>
-        <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row.cne}
-        </TableCell>
-        <TableCell align="left">{row.nom}</TableCell>
-        <TableCell align="left">{row.prenom}</TableCell>
-        <TableCell align="left">{row.email}</TableCell>
-        <TableCell align="left">{row.statut}</TableCell>
-      </TableRow>
-    );
-  })}
-  {emptyRows > 0 && (
-    <TableRow
-      style={{
-        height: (dense ? 33 : 53) * emptyRows,
-      }}
-    >
-      <TableCell colSpan={3} />
-    </TableRow>
-  )}
-</TableBody>
-
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, index)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={index}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                      {row[0]} {/* CNE */}
+                    </TableCell>
+                    <TableCell align="left">{row[1]}</TableCell> {/* Nom */}
+                    <TableCell align="left">{row[2]}</TableCell> {/* Prénom */}
+                    <TableCell align="left">{row[3]}</TableCell> {/* Email */}
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={etudiants.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

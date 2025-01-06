@@ -43,9 +43,10 @@ const rows = [
   createData('Henceforth', 'YOUSSef', 'Développement'),
 ];
 
-export default function ListeConvention() {
-  const handleGenerateConvention = () => {
-    generatePDF('hh', 'hh', 'hh', 'hh');
+export default function ListeConvention({PostulationDetails}) {
+  const handleGenerateConvention = (row) => {
+    const { num_postulation,titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin } = row
+    generatePDF(titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin);
   };
 
   const [selected, setSelected] = React.useState([]);
@@ -67,7 +68,7 @@ export default function ListeConvention() {
   };
 
   // Slice the rows based on pagination
-  const paginatedRows = rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedRows = PostulationDetails.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <TableContainer component={Paper}>
@@ -77,17 +78,21 @@ export default function ListeConvention() {
             <StyledTableCell>Entreprise</StyledTableCell>
             <StyledTableCell align="right">Etudiant</StyledTableCell>
             <StyledTableCell align="right">Sujet</StyledTableCell>
+            <StyledTableCell align="right">Date de début</StyledTableCell>
+            <StyledTableCell align="right">Date de fin</StyledTableCell>
             <StyledTableCell align="right">Convention</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {paginatedRows.map((row) => (
-            <StyledTableRow key={row.entreprise}>
+            <StyledTableRow key={row.num_entreprise}>
               <StyledTableCell component="th" scope="row">
-                {row.entreprise}
+                {row.nom_entreprise}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.etudiant}</StyledTableCell>
-              <StyledTableCell align="right">{row.sujet}</StyledTableCell>
+              <StyledTableCell align="right">{row.nom_etudiant} {row.prenom_etudiant}</StyledTableCell>
+              <StyledTableCell align="right">{row.titre}</StyledTableCell>
+              <StyledTableCell align="right">{row.date_debut}</StyledTableCell>
+              <StyledTableCell align="right">{row.date_fin}</StyledTableCell>
               <StyledTableCell align="right">
                 <Button variant="contained" color="primary" onClick={handleGenerateConvention}>
                   Générer

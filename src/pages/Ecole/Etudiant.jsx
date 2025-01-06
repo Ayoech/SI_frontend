@@ -30,8 +30,8 @@ const Etudiant = () => {
   useEffect(()=>{
     const getEtudiants = async () => {
       try {
-        const data = await fetchEtudiants();
-        setEtudiants(data);
+        const response = await fetchEtudiants();
+        setEtudiants(response.data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,6 +40,7 @@ const Etudiant = () => {
     };
     getEtudiants();
   },[])
+
 
 
   return (

@@ -17,13 +17,13 @@ const FormeEtudiant = ({ toggleFormeEtudiant }) => {
       .matches(/^\d{5}$/, "Code postal must be 5 digits")
       .required("Code postal is required"),
     ville: Yup.string().required("Ville is required"),
-    Sexe: Yup.string().required("Sexe is required"),
+    sexe: Yup.string().required("Sexe is required"),
     date_naissance: Yup.date().required("Date de naissance is required"),
     telephone: Yup.string()
       .matches(/^\d{10}$/, "Telephone must be 10 digits")
       .required("Telephone is required"),
     filiere: Yup.string().required("Filière is required"),
-    annee_promo: Yup.string().required("Année de promotion is required"),
+    annee_promo: Yup.number().required("Année de promotion is required"),
   });
 
   const [message,setMessage] =useState(null);
@@ -42,12 +42,13 @@ const FormeEtudiant = ({ toggleFormeEtudiant }) => {
     date_naissance:"",
     telephone:"",
     filiere:"",
-    annee_promo:""
+    annee_promo:0,
   };
 
 
   const handleSubmit = async(values)=>{
     try{
+      console.log('hh')
       const response = await CreerEtudiant(values);
       setMessage(response.data.message);
     }catch(error){
@@ -310,7 +311,7 @@ const FormeEtudiant = ({ toggleFormeEtudiant }) => {
                 <option value="GD">GD</option>
                 <option value="IDF">IDF</option>
                 <option value="IDSIT">IDSIT</option>
-                <option value="2IA">2IA</option>
+                <option value="2IA">AI</option>
                 <option value="SSI">SSI</option>
                 <option value="2SCL">2SCL</option>
                 <option value="SSE">SSE</option>
@@ -329,7 +330,7 @@ const FormeEtudiant = ({ toggleFormeEtudiant }) => {
               </label>
               <Field
                 name="annee_promo"
-                type="text"
+                type="number"
                 className="w-full border rounded-md p-2"
                 placeholder="Année de promotion"
               />

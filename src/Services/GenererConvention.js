@@ -1,16 +1,13 @@
 
 import { jsPDF } from 'jspdf';
 
-  const generatePDF = (titre,nom_entreprise,nom_eleve,sujet) => {
+  const generatePDF = (titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin) => {
     const doc = new jsPDF();
     console.log('hi')
 
-    // Create a container div to hold the HTML structure
     const content = document.createElement('div');
-    content.style.fontFamily = 'Arial, sans-serif'; // Set font
+    content.style.fontFamily = 'Arial, sans-serif'; 
     content.style.padding = '20px';
-    //const image = new Image();
-    //image.src = '/logo.png'; 
     console.log('hi2')
     content.innerHTML = `
       <div style="display: flex; align-items: center;">
@@ -53,17 +50,17 @@ import { jsPDF } from 'jspdf';
     loadImage('/logo.png')
     .then((img) => {
       console.log('Image loaded');
-      doc.addImage(img, 'PNG', 10, 10, 50, 50); // Adds the image to the PDF
+      doc.addImage(img, 'PNG', 10, 10, 50, 50); 
       doc.html(content, {
         callback: function (doc) {
           doc.save('convention_de_stage.pdf');
           const pdfBlob = doc.output('blob');
           console.log('PDF generated');
           const pdfUrl = URL.createObjectURL(pdfBlob);
-          window.open(pdfUrl, '_blank');  // Open the generated PDF in a new tab
+          window.open(pdfUrl, '_blank');  
         },
         x: 10,
-        y: 70,  // Adjust y to avoid overlapping with the logo
+        y: 70, 
       });
     })
     .catch((error) => {
