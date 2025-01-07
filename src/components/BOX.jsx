@@ -1,13 +1,14 @@
 import { MoreVertical, ArrowRight } from 'lucide-react'
+import React from 'react'
 
-export default function BOX({ 
+const BOX=React.memo(({ 
   title, 
   company, 
   location, 
   type, 
   simplified = true ,
   handleBoxClick
-}) {
+}) =>{
 
   
   return (
@@ -28,17 +29,19 @@ export default function BOX({
       </div>
       <div className="px-6 pb-6">
         <div className="flex flex-col gap-3">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-gray-800">
             {type}
           </span>
           {simplified && (
             <button className="flex items-center text-blue-600 font-semibold hover:underline" onClick={handleBoxClick}>
               <ArrowRight className="mr-2 h-4 w-4" />
-              Candidature simplifiée
+              Voir les détails
             </button>
           )}
         </div>
       </div>
     </div>
   )
-}
+})
+
+export default BOX

@@ -35,14 +35,14 @@ function createData(entreprise, etudiant, sujet) {
   return { entreprise, etudiant, sujet };
 }
 
-const rows = [
+/*const rows = [
   createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
   createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
   createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
   createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
   createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
   createData('Henceforth', 'YOUSSef', 'Développement'),
-];
+];*/
 
 export default function ListeConvention({PostulationDetails}) {
   const handleGenerateConvention = async(row) => {
@@ -107,7 +107,7 @@ export default function ListeConvention({PostulationDetails}) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={rows.length}
+        count={PostulationDetails.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

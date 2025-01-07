@@ -30,7 +30,7 @@ function createData(id, offre, statut) {
   };
 }
 
-const rows = [
+/*const rows = [
   createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
   createData(2, 'Donut', 452, 25.0, 51, 4.9),
   createData(3, 'Eclair', 262, 16.0, 24, 6.0),
@@ -44,7 +44,7 @@ const rows = [
   createData(11, 'Marshmallow', 318, 0, 81, 2.0),
   createData(12, 'Nougat', 360, 19.0, 9, 37.0),
   createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
+];*/
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,6 +68,12 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: 'Offre',
+  },
+  {
+    id: 'nom_entreprise',
+    numeric: false,
+    disablePadding: true,
+    label: 'Nom de l\'entreprise',
   },
   {
     id: 'statut',
@@ -192,7 +198,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ListePostulation() {
+export default function ListePostulation({postulations} ) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -208,7 +214,7 @@ export default function ListePostulation() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = postulations.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -249,14 +255,14 @@ export default function ListePostulation() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - postulations.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      [...rows]
+      [...postulations]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage,postulations],
   );
 
   return (
@@ -275,7 +281,7 @@ export default function ListePostulation() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={postulations.length}
             />
             <TableBody>
   {visibleRows.map((row, index) => {
@@ -289,7 +295,7 @@ export default function ListePostulation() {
         role="checkbox"
         aria-checked={isItemSelected}
         tabIndex={-1}
-        key={row.id}
+        key={row.NUM_POSTULATION}
         selected={isItemSelected}
         sx={{ cursor: 'pointer' }}
       >
@@ -303,9 +309,12 @@ export default function ListePostulation() {
           />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row.offre}
+          {row.TITRE}
         </TableCell>
-        <TableCell align="left">{row.statut}</TableCell>
+        <TableCell component="th" id={labelId} scope="row" padding="none">
+          {row.NOM_ENTREPRISE}
+        </TableCell>
+        <TableCell align="left">{row.STATUT_POSTULATION}</TableCell>
       </TableRow>
     );
   })}
@@ -325,7 +334,7 @@ export default function ListePostulation() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={postulations.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

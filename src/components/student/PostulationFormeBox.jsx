@@ -2,7 +2,7 @@ import React from 'react';
 import PostulationForme from './PostulationForme';
 import { X } from 'lucide-react';
 
-const PostulationFormeBox = ({togglePostulationForme}) => {
+const PostulationFormeBox = ({togglePostulationForme,offerId}) => {
 
     
 
@@ -11,7 +11,7 @@ const PostulationFormeBox = ({togglePostulationForme}) => {
       <button className="text-gray-400 hover:text-gray-500" onClick={togglePostulationForme}>
         <X className="h-5 w-5" />
       </button>
-      <PostulationForme/>
+      <PostulationForme offerId={offerId}/>
     </div>
   )
 }

@@ -21,8 +21,8 @@ export const BoxOffre = ({titre,description,domaine,toggleOffreBox,togglePostula
           <button className='bg-blue-500 text-white rounded-full py-2 px-6 font-semibold hover:bg-blue-600 transition duration-300 mb-8' onClick={togglePostulationForme}>Postuler</button>
         </div>
         <div className="space-y-1">
-          <p className="text-base text-black font-bold text-3xl">Description</p>
-          <p className="text-base text-gray-700">{description}</p>
+          <p className="text-2xl mb-2 text-black font-bold ">Description</p>
+          <p className=" text-xl ml-4 text-gray-700">{description}</p>
         </div>
       </div>
       <button className="text-gray-400 hover:text-gray-500" onClick={handleCloseClick}>
