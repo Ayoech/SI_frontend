@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import generatePDF from '../../Services/GenererConvention';
 import { Button } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
+import CreerConvention from '../../Services/CreerConvention'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -44,9 +45,10 @@ const rows = [
 ];
 
 export default function ListeConvention({PostulationDetails}) {
-  const handleGenerateConvention = (row) => {
+  const handleGenerateConvention = async(row) => {
     const { num_postulation,titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin } = row
-    generatePDF(titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin);
+    const pdfFile = await generatePDF(titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin);
+    const response = await CreerConvention(pdfFile);
   };
 
   const [selected, setSelected] = React.useState([]);

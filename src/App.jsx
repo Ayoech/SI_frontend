@@ -17,6 +17,7 @@ import Entreprise from './pages/Ecole/Entreprise.jsx';
 import ManageOffers from './pages/entreprise/ManageOffers.jsx';
 import Gestionnaire from './pages/entreprise/Gestionnaire.jsx';
 import Statistics from './components/ecole/Statistics.jsx';
+import Offers from './pages/entreprise/Offers.jsx';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path='/entreprise' element={<Dashent />} />
         <Route path='/student/Applications' element={<Applicants />} />
         <Route path='/entreprise/create' element={<CreateOffer />} />
+        <Route path='/entreprise/offres' element={<Offers />} />
         <Route path='/entreprise/interne' element={<CreateInternalAccount />} />
         <Route path='/entreprise/edit' element={<ManageOffers />} />
         <Route path='/ecole' element={<Dasheco />} />

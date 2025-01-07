@@ -1,7 +1,7 @@
 
 import { jsPDF } from 'jspdf';
 
-  const generatePDF = (titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin,filiere,addresse) => {
+  const generatePDF = async(titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin,filiere,addresse) => {
     const doc = new jsPDF();
     console.log('hi')
 
@@ -48,9 +48,35 @@ Le sujet du stage s’intitule : ${titre}  </p>
     };
   
 
-    loadImage('/logo.png')
+    try {
+      const img = await loadImage('/logo.png');
+      doc.addImage(img, 'PNG', 10, 10, 50, 50); 
+    } catch (error) {
+      console.error('Image failed to load', error);
+    }
+  
+    return new Promise((resolve) => {
+      doc.html(content, {
+        callback: function (doc) {
+          if (options.mode === 'download') {
+            doc.save('convention_de_stage.pdf'); // Download the PDF
+          } else if (options.mode === 'preview') {
+            const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl, '_blank'); // Preview the PDF
+          } else if (options.mode === 'return') {
+            const pdfBlob = doc.output('blob');
+            const pdfFile = new File([pdfBlob], 'convention_de_stage.pdf', { type: 'application/pdf' });
+            resolve(pdfFile); // Return the File object
+          }
+        },
+        x: 10,
+        y: 70,
+      });
+    });
+  };
+    /*loadImage('/logo.png')
     .then((img) => {
-      console.log('Image loaded');
       doc.addImage(img, 'PNG', 10, 10, 50, 50); 
       doc.html(content, {
         callback: function (doc) {
@@ -69,5 +95,5 @@ Le sujet du stage s’intitule : ${titre}  </p>
     });
 
   console.log('hi4');
-};
+};*/
   export default generatePDF;

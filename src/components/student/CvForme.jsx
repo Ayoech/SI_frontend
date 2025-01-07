@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import UploadCv from '../../Services/UploadCv';
 
 const CvForme = ({profileData}) => {
+
+  const [submitting, setSubmitting] = useState(false)
 
   const initialValues = {
     cv: null
   };
 
   const validationSchema = Yup.object({
-    cv: Yup.mixed().required('CV is required'),
+    cv: Yup.mixed()
+    .required('CV is required')
+    .test('fileType', 'Only PDF files are allowed', (value) =>
+      value && value.type === 'application/pdf'
+    )
+    .test('fileSize', 'File size is too large', (value) =>
+      value && value.size <= 20 * 1024 * 1024 // 5MB limit
+    ),
   });
 
 
@@ -18,9 +28,16 @@ const CvForme = ({profileData}) => {
     setFieldValue('cv', file); 
   };
 
-  const handleSubmit = (values) => {
-    console.log('Profile Data:', values);
-    alert('Profile updated successfully!');
+  const handleSubmit = async(values) => {
+    try{
+      setSubmitting(true);
+    const response =await UploadCv(values.cv);
+    console.log('response: ' + response);
+    }catch(error){
+      console.error('an error has occured: '+error)
+    }finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -52,7 +69,7 @@ const CvForme = ({profileData}) => {
               <ErrorMessage name="cv" component="div" style={{ color: 'red' }} />
             </div>
             <div className='font-semibold text-xl mb-4' style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded'>Télécharger</button>
+          <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded'>{submitting ? 'Uploading...' : 'Télécharger'}</button>
           </div>
           </Form>
         )}

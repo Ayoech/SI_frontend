@@ -29,15 +29,14 @@ const Applicants = () => {
     try {
       const applicationData = { applicationId: applicantId };
       const apiEndpoint = action === 'to_be_interviewed' 
-        ? '/api/applicants/invite'
+        ? '/api/v1/entreprise/applicants/invite'
         : action === 'accepted'
-        ? '/api/applications/validate'
-        : '/api/applications/reject';
+        ? '/api/v1/entreprise/applications/validate'
+        : '/api/v1/entreprise/applications/reject';
         
       const response = await axios.post(apiEndpoint, applicationData);
       alert(response.data.message || `Application ${action} successfully.`);
-      // Re-fetch applicants after action
-      const updatedApplicants = await axios.get('/api/offers/:offerId/applicants'); // Replace with actual offer ID
+      const updatedApplicants = await axios.get('/api/v1/entreprise/offers/:offerId/applicants'); // Replace with actual offer ID
       setApplicants(updatedApplicants.data);
     } catch (error) {
       console.error(`Error processing action ${action}:`, error.message);
