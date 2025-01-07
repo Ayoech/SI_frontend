@@ -18,6 +18,7 @@ import ManageOffers from './pages/entreprise/ManageOffers.jsx';
 import Gestionnaire from './pages/entreprise/Gestionnaire.jsx';
 import Statistics from './components/ecole/Statistics.jsx';
 import Offers from './pages/entreprise/Offers.jsx';
+import OfferDetails from './OfferDetails.jsx';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path='/ecole/entreprises' element={<Entreprise />} />
         <Route path='/entreprise/gestform' element={<Gestionnaire />} />
         <Route path='/ecole/statistics' element={<Statistics />} />
+        <Route path="/offer-details/:num_offre" element={<OfferDetails />} />
         
       </Routes>
     </Router>

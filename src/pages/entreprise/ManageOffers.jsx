@@ -1,50 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Ensure axios is installed
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
-import Homy from '../../Homy';
 
 const ManageOffers = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
-  const [offers, setOffers] = useState([]);
-  const [statusUpdating, setStatusUpdating] = useState(false);
 
+  // Hardcoded list of offers for testing
+  const [offres, setOffres] = useState([
+    {
+      num_offre: 1,
+      description: 'Offer description 1',
+      domaine: 'IT',
+      date_debut: '2025-01-01',
+      date_fin: '2025-02-01',
+      etat_offre: 'Active',
+    },
+    {
+      num_offre: 2,
+      description: 'Offer description 2',
+      domaine: 'Marketing',
+      date_debut: '2025-02-01',
+      date_fin: '2025-03-01',
+      etat_offre: 'Inactive',
+    },
+    {
+      num_offre: 3,
+      description: 'Offer description 3',
+      domaine: 'Finance',
+      date_debut: '2025-03-01',
+      date_fin: '2025-04-01',
+      etat_offre: 'Active',
+    },
+  ]);
+
+  // Open or close sidebar
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
-  };
-
-  // Fetch offers when the component is mounted
-  useEffect(() => {
-    const fetchOffers = async () => {
-      try {
-        const response = await axios.get('/api/enterprise/offers'); // Adjust the API endpoint accordingly
-        setOffers(response.data);
-      } catch (error) {
-        console.error('Error fetching offers:', error.message);
-      }
-    };
-    fetchOffers();
-  }, []);
-
-  const toggleStatus = async (offerId, currentStatus) => {
-    try {
-      setStatusUpdating(true);
-      const newStatus = currentStatus === 'Ouvert' ? 'Ferme' : 'Ouvert';
-      const response = await axios.put(`/api/enterprise/offers/${offerId}/status`, { status: newStatus });
-      alert(response.data.message || `Status updated to ${newStatus}.`);
-      
-      // Update the offers list with the new status
-      setOffers((prevOffers) =>
-        prevOffers.map((offer) =>
-          offer.id === offerId ? { ...offer, status: newStatus } : offer
-        )
-      );
-    } catch (error) {
-      console.error('Error updating status:', error.message);
-      alert('Failed to update the status.');
-    } finally {
-      setStatusUpdating(false);
-    }
   };
 
   return (
@@ -52,50 +44,58 @@ const ManageOffers = () => {
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
-        className={`flex justify-center items-start min-h-screen bg-gray-100 ${
-          openSidebarToggle ? 'ml-[36rem]' : 'ml-[16rem]'
-        } mt-32`}
+        className={`flex justify-center items-start   ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
       >
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
-          <h2 className="text-2xl font-bold mb-4">Manage Offers</h2>
-          <table className="table-auto w-full border-collapse border border-gray-300 text-left">
+        <div className="rounded-lg p-24 max-w-6xl">
+          <h1 className="text-2xl font-semibold mb-4">Liste des Offres</h1>
+
+          <table className="min-w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="border border-gray-300 px-4 py-2">Offer ID</th>
-                <th className="border border-gray-300 px-4 py-2">Description</th>
-                <th className="border border-gray-300 px-4 py-2">Status</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-8 py-2">Numéro de l'offre</th>
+                <th className="border border-gray-300 px-8 py-2">Description</th>
+                <th className="border border-gray-300 px-8 py-2">Domaine</th>
+                <th className="border border-gray-300 px-8 py-2">Date de début</th>
+                <th className="border border-gray-300 px-8 py-2">Date de fin</th>
+                <th className="border border-gray-300 px-8 py-2">État de l'offre</th>
+                <th className="border border-gray-300 px-8a py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {offers.map((offer, index) => (
-                <tr
-                  key={offer.id}
-                  className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
-                >
-                  <td className="border border-gray-300 px-4 py-2">{offer.id}</td>
-                  <td className="border border-gray-300 px-4 py-2">{offer.description}</td>
-                  <td className="border border-gray-300 px-4 py-2">{offer.status}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      onClick={() => toggleStatus(offer.id, offer.status)}
-                      className={`px-3 py-1 rounded ${
-                        offer.status === 'Ouvert'
-                          ? 'bg-red-500 hover:bg-red-600'
-                          : 'bg-green-500 hover:bg-green-600'
-                      } text-white`}
-                      disabled={statusUpdating}
-                    >
-                      {offer.status === 'Ouvert' ? 'Close Offer' : 'Open Offer'}
-                    </button>
-                  </td>
+              {offres.length > 0 ? (
+                offres.map((offer, index) => (
+                  <tr key={offer.num_offre} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <Link
+                        to={`/offer-details/${offer.num_offre}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {offer.num_offre}
+                      </Link>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">{offer.description}</td>
+                    <td className="border border-gray-300 px-4 py-2">{offer.domaine}</td>
+                    <td className="border border-gray-300 px-4 py-2">{offer.date_debut}</td>
+                    <td className="border border-gray-300 px-4 py-2">{offer.date_fin}</td>
+                    <td className="border border-gray-300 px-4 py-2">{offer.etat_offre}</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <button
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      >
+                        Change Status
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">No offers available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </div>
-      <Homy />
     </div>
   );
 };
