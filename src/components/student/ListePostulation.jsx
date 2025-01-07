@@ -76,11 +76,17 @@ const headCells = [
     label: 'Nom de l\'entreprise',
   },
   {
-    id: 'statut',
+    id: 'statut_postulation',
     numeric: false,
     disablePadding: false,
-    label: 'statut',
+    label: 'Réponse de l\'entreprise',
   },
+  {
+    id: 'etat_acceptation',
+    numeric: false,
+    disablePadding: false,
+    label: 'Réponse de l\'école',
+  }
 ];
 
 function EnhancedTableHead(props) {
@@ -314,7 +320,17 @@ export default function ListePostulation({postulations} ) {
         <TableCell component="th" id={labelId} scope="row" padding="none">
           {row.NOM_ENTREPRISE}
         </TableCell>
-        <TableCell align="left">{row.STATUT_POSTULATION}</TableCell>
+        <TableCell align="left">
+          {row.STATUT_POSTULATION === 'Reçue' && 'Reçue - En attente d\'une réponse'}
+          {row.STATUT_POSTULATION === 'APPROVED' && 'Approuvé'}
+          {row.STATUT_POSTULATION === 'TO_BE_INTERVIEWD' && 'Convoqué à l\'entretien'}
+          {row.STATUT_POSTULATION === 'REJECTED' && 'Rejeté'}
+        </TableCell>
+        <TableCell align="left">
+          {row.ETAT_ACCEPTATION === 'En attente' && 'En attente'}
+          {row.ETAT_ACCEPTATION === 'Accepté' && 'Stage accepté'}
+          {row.ETAT_ACCEPTATION === 'Rejeté' && 'Stage rejeté'}
+        </TableCell>
       </TableRow>
     );
   })}
