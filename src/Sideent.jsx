@@ -14,8 +14,7 @@ import { TbFileUpload, TbUser  } from "react-icons/tb";
 
 function Sideent({ openSidebarToggle, OpenSidebar }) {
  
-  const email = useParams();
-  console.log("Email value in Sidebar:", email.email);
+
 
   return (
     <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""} style={{height: '1000px'}}>
@@ -41,11 +40,11 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
           
         </li>
         <li className='sidebar-list-item ' style={{color: 'grey'}}>
-          <Link to={`/entreprise/offres`} className="flex items-center">
+          <Link to={`/entreprise/edit`} className="flex items-center">
             <FaTasks className='icon mr-2' /> View offers
           </Link>
         </li>
-        <li className='sidebar-list-item' style={{color: 'black'}}>
+        <li className='sidebar-list-item' style={{color: 'balack'}}>
           
           <Link to={'/student/Applications'} className="flex items-center">
             <FaComment className='icon mr-2' /> Applicants

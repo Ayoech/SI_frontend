@@ -1,101 +1,101 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Ensure axios is installed
+import { Link } from 'react-router-dom';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
-import Homy from '../../Homy';
+import axios from 'axios';
 
 const ManageOffers = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
-  const [offers, setOffers] = useState([]);
-  const [statusUpdating, setStatusUpdating] = useState(false);
+  const [offres, setOffres] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // Open or close sidebar
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
-  // Fetch offers when the component is mounted
   useEffect(() => {
-    const fetchOffers = async () => {
-      try {
-        const response = await axios.get('/api/enterprise/offers'); // Adjust the API endpoint accordingly
-        setOffers(response.data);
-      } catch (error) {
-        console.error('Error fetching offers:', error.message);
-      }
-    };
-    fetchOffers();
-  }, []);
-
-  const toggleStatus = async (offerId, currentStatus) => {
-    try {
-      setStatusUpdating(true);
-      const newStatus = currentStatus === 'Ouvert' ? 'Ferme' : 'Ouvert';
-      const response = await axios.put(`/api/enterprise/offers/${offerId}/status`, { status: newStatus });
-      alert(response.data.message || `Status updated to ${newStatus}.`);
-      
-      // Update the offers list with the new status
-      setOffers((prevOffers) =>
-        prevOffers.map((offer) =>
-          offer.id === offerId ? { ...offer, status: newStatus } : offer
-        )
-      );
-    } catch (error) {
-      console.error('Error updating status:', error.message);
-      alert('Failed to update the status.');
-    } finally {
-      setStatusUpdating(false);
+    // Retrieve num_entreprise from localStorage
+    const num_entreprise = localStorage.getItem('num_entreprise');
+    
+    if (num_entreprise) {
+      // Fetch offers for the entreprise using num_entreprise
+      axios.get(`http://localhost:5000/entreprises/offers/${num_entreprise}`)
+        .then(response => {
+          setOffres(response.data.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error("Error fetching offers:", error);
+          setLoading(false);
+        });
+    } else {
+      console.log("num_entreprise not found in localStorage");
+      setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
-        className={`flex justify-center items-start min-h-screen bg-gray-100 ${
-          openSidebarToggle ? 'ml-[36rem]' : 'ml-[16rem]'
-        } mt-32`}
+        className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
       >
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
-          <h2 className="text-2xl font-bold mb-4">Manage Offers</h2>
-          <table className="table-auto w-full border-collapse border border-gray-300 text-left">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="border border-gray-300 px-4 py-2">Offer ID</th>
-                <th className="border border-gray-300 px-4 py-2">Description</th>
-                <th className="border border-gray-300 px-4 py-2">Status</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {offers.map((offer, index) => (
-                <tr
-                  key={offer.id}
-                  className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
-                >
-                  <td className="border border-gray-300 px-4 py-2">{offer.id}</td>
-                  <td className="border border-gray-300 px-4 py-2">{offer.description}</td>
-                  <td className="border border-gray-300 px-4 py-2">{offer.status}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      onClick={() => toggleStatus(offer.id, offer.status)}
-                      className={`px-3 py-1 rounded ${
-                        offer.status === 'Ouvert'
-                          ? 'bg-red-500 hover:bg-red-600'
-                          : 'bg-green-500 hover:bg-green-600'
-                      } text-white`}
-                      disabled={statusUpdating}
-                    >
-                      {offer.status === 'Ouvert' ? 'Close Offer' : 'Open Offer'}
-                    </button>
-                  </td>
+        <div className="rounded-lg p-24 max-w-6xl">
+          <h1 className="text-2xl font-semibold mb-4">Liste des Offres</h1>
+
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <table className="min-w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-300 px-8 py-2">Numéro de l'offre</th>
+                  <th className="border border-gray-300 px-8 py-2">Description</th>
+                  <th className="border border-gray-300 px-8 py-2">Domaine</th>
+                  <th className="border border-gray-300 px-8 py-2">Date de début</th>
+                  <th className="border border-gray-300 px-8 py-2">Date de fin</th>
+                  <th className="border border-gray-300 px-8 py-2">État de l'offre</th>
+                  <th className="border border-gray-300 px-8a py-2">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {offres.length > 0 ? (
+                  offres.map((offer, index) => (
+                    <tr key={offer.num_offre} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <Link
+                          to={`/offer-details/${offer.num_offre}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          {offer.num_offre}
+                        </Link>
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.description}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.domaine}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.date_debut}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.date_fin}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.etat_offre}</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                        >
+                          Change Status
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center py-4">No offers available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
-      <Homy />
     </div>
   );
 };
