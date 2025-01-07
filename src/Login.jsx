@@ -49,7 +49,7 @@ function Login() {
         } else if (role === 'A_ENTREPRISE') {
           navigate('/entreprise');
         } else if (role === 'ETUDIANT') {
-          navigate('/dash');
+          navigate('/student/Profile');
         } else if (role === 'G_ENTREPRISE') {
           navigate('/entreprise');
         } else {

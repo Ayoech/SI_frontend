@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
-import axios from 'axios';
+import CreateOffre from  '../../Services/CreateOffre' // Import the CreateOffre function
 
 const CreateOffer = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
@@ -9,67 +9,65 @@ const CreateOffer = () => {
     titre: '',
     description: '',
     date_debut: '',
-    date_fin: ''
+    date_fin: '',
   });
-
-  const [offers, setOffers] = useState([]);
   const [numUtilisateur, setNumUtilisateur] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(''); // To store error message
+  const [successMessage, setSuccessMessage] = useState(''); // To store success message
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
-  // Function to get offers
-  const fetchOffers = async () => {
-    try {
-      const token = localStorage.getItem('jwt'); // Assuming JWT is stored in localStorage
-      const response = await axios.get('http://localhost:3000/api/v1/entreprise/offers', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setOffers(response.data); // Assuming response contains list of offers
-    } catch (error) {
-      console.error('Error fetching offers:', error);
-    }
-  };
-
-  // Fetch offers and extract num_utilisateur from JWT when the component mounts
+  // Function to extract the user number from the JWT token
   useEffect(() => {
-    fetchOffers();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('JWT token not found. Please login.');
+      // Optional: Redirect to login page
+      return;
+    }
 
-    // Decode the JWT to extract num_utilisateur (assuming the token includes it)
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode JWT
-      setNumUtilisateur(decodedToken.num_utilisateur); // Extract num_utilisateur from the token
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.userId) {
+        setNumUtilisateur(user.userId);
+      } else {
+        console.error('num_utilisateur not found in token.');
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error.message);
     }
   }, []);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOfferData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear previous error messages
+    setSuccessMessage(''); // Clear previous success messages
+
     try {
-      const token = localStorage.getItem('jwt'); // Get JWT token from localStorage
-      const response = await axios.post(
-        'http://localhost:3000/api/v1/entreprise/offers',
-        { ...offerData, num_utilisateur: numUtilisateur }, // Include num_utilisateur in the request
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      console.log('Offer created successfully:', response.data);
+      const response = await CreateOffre(offerData);
+
+      // If the offer was successfully created
+      setSuccessMessage('Offer created successfully!');
+      setOfferData({
+        titre: '',
+        description: '',
+        date_debut: '',
+        date_fin: '',
+      }); // Reset form fields
     } catch (error) {
-      console.error('Error creating offer:', error.message);
+      setErrorMessage('Failed to create offer. Please try again later.');
     }
   };
 
@@ -77,11 +75,17 @@ const CreateOffer = () => {
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-      <div className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}>
+      <div
+        className={`flex justify-center items-start ${
+          openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'
+        }`}
+      >
         <div className="rounded-lg p-24 max-w-6xl">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="titre" className="block font-medium" style={{ width: '200px' }}>Titre</label>
+              <label htmlFor="titre" className="block font-medium" style={{ width: '200px' }}>
+                Titre
+              </label>
               <input
                 type="text"
                 name="titre"
@@ -93,7 +97,9 @@ const CreateOffer = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="description" className="block font-medium" style={{ width: '200px' }}>Description</label>
+              <label htmlFor="description" className="block font-medium" style={{ width: '200px' }}>
+                Description
+              </label>
               <input
                 type="text"
                 name="description"
@@ -105,7 +111,9 @@ const CreateOffer = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="date_debut" className="block font-medium" style={{ width: '200px' }}>Start Date</label>
+              <label htmlFor="date_debut" className="block font-medium" style={{ width: '200px' }}>
+                Start Date
+              </label>
               <input
                 type="date"
                 name="date_debut"
@@ -117,7 +125,9 @@ const CreateOffer = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="date_fin" className="block font-medium" style={{ width: '200px' }}>End Date</label>
+              <label htmlFor="date_fin" className="block font-medium" style={{ width: '200px' }}>
+                End Date
+              </label>
               <input
                 type="date"
                 name="date_fin"
@@ -135,6 +145,19 @@ const CreateOffer = () => {
               </button>
             </div>
           </form>
+
+          {/* Display success or error message */}
+          {successMessage && (
+            <div className="mt-4 text-green-500">
+              <p>{successMessage}</p>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mt-4 text-red-500">
+              <p>{errorMessage}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
