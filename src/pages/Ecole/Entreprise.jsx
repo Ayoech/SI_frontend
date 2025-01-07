@@ -4,6 +4,7 @@ import Header from '../../Header';
 import Homy from '../../Homy';
 import ListeEntreprise from '../../components/ecole/ListeEntreprise'
 import fetchEntreprises from '../../Services/ListeEntrepriseService';
+import FormeEntreprise from '../../components/ecole/FormeEntreprise';
 
 
 const Entreprise = () => {
@@ -18,17 +19,19 @@ const Entreprise = () => {
 
 
   //forme etudiant
-  const [formeEtudiant, setFormeEtudiant] = useState(false);
+  const [formeEntreprise, setFormeEntreprise] = useState(false);
 
-  const toggleFormeEtudiant = () => {
-    setFormeEtudiant(!formeEtudiant)
+  const toggleFormeEntreprise = () => {
+    setFormeEntreprise(!formeEntreprise)
   }
 
   useEffect(()=>{
     const getEntreprises = async () => {
       try {
-        const data = await fetchEntreprises();
-        setEntreprises(data);
+        const response = await fetchEntreprises();
+        setEntreprises(response.data);
+        console.log('data: ', response.data)
+        console.log('entreprises: ',entreprises)
       } catch (error) {
         setError(error.message);
       } finally {
@@ -38,15 +41,22 @@ const Entreprise = () => {
     getEntreprises();
   },[])
 
+  
 
   return (
     <div className='grid-container'>
       <Header OpenSidebar={OpenSidebar}/>
           <EcoleSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
-          
+          {formeEntreprise && (
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-gray-500 " >
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full mt-24 mb-24">
+            <FormeEntreprise formeEntreprise={formeEntreprise} toggleFormeEntreprise={toggleFormeEntreprise} />
+          </div>
+        </div>
+      )}
           <div className='listeOffres'>
                 <div className='mb-4'>
-                  <button className='rounded-md bg-blue-500 hover:bg-blue-700 p-4 text-white font-semibold transition duration-300' onClick={toggleFormeEtudiant}>Ajouter une Entreprise</button>
+                  <button className='rounded-md bg-blue-500 hover:bg-blue-700 p-4 text-white font-semibold transition duration-300' onClick={toggleFormeEntreprise}>Ajouter une Entreprise</button>
                 </div>
                <ListeEntreprise entreprises = {entreprises} />
           </div>

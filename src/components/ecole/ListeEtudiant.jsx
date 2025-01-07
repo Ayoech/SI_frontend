@@ -21,6 +21,10 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { Button } from '@mui/material';
+import ActiverCompteService from '../../Services/ActiverCompteService';
+import DesactiverCompteService from '../../Services/DesactiverCompteService';
+import RecupererPasswordService from '../../Services/RecupererPasswordService';
 
 function createData(cne,nom,prenom,email, statut) {
   return {
@@ -75,6 +79,18 @@ const headCells = [
     disablePadding: false,
     label: 'Email',
   },
+  {
+    id: 'statut',
+    numeric: false,
+    disablePadding: false,
+    label: 'Statut',
+  },
+  {
+    id: 'actions',
+    numeric: false,
+    disablePadding: false,
+    label: 'Actions',
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -104,10 +120,10 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{
+            /*sx={{
                 width: headCell.id === 'email' ? '30%' : 'auto',
                 textAlign: headCell.id === 'statut' ? 'left' : 'left',
-            }}
+            }}*/
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -247,6 +263,33 @@ export default function ListeEtudiant({ etudiants }) {
     setDense(event.target.checked);
   };
 
+  const handleActivation = async(row) =>{
+    try{
+      await ActiverCompteService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
+  const handleDesactivation = async(row) => {
+    try{
+      await DesactiverCompteService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
+  const RecupererPassword = async(row) => {
+    try{
+      await RecupererPasswordService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - etudiants.length) : 0;
@@ -303,11 +346,27 @@ export default function ListeEtudiant({ etudiants }) {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row[0]} {/* CNE */}
+                      {row.CNE} {/* CNE */}
                     </TableCell>
-                    <TableCell align="left">{row[1]}</TableCell> {/* Nom */}
-                    <TableCell align="left">{row[2]}</TableCell> {/* Prénom */}
-                    <TableCell align="left">{row[3]}</TableCell> {/* Email */}
+                    <TableCell align="left">{row.NOM}</TableCell> {/* Nom */}
+                    <TableCell align="left">{row.PRENOM}</TableCell> {/* Prénom */}
+                    <TableCell align="left">{row.EMAIL}</TableCell> {/* Email */}
+                    <TableCell align="left">{row.STATUT}</TableCell>
+                    <TableCell align="left">
+                    <div className='flex justify-content'>
+                      {row.STATUT_COMPTE === "Activé" ? (
+                              < Button variant="contained" color="secondary" onClick={()=>handleDesactivation(row)}>
+                                Désactiver
+                              </Button>
+                             ) : (
+                                <Button variant="contained" color="primary" onClick={()=>handleActivation(row)}>Activer</Button>
+                           )};
+                        <div className='ml-4 mr-4'>
+                          <Button variant="contained" color="primary" onClick={()=>RecupererPassword(row)}>Supprimer</Button>
+                        </div>
+                        <Button variant="contained" color="primary">Récupérer Mot de passe</Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 );
               })}

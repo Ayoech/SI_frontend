@@ -42,7 +42,6 @@ const Etudiant = () => {
   },[])
 
 
-
   return (
     <div className='grid-container'>
       <Header OpenSidebar={OpenSidebar}/>

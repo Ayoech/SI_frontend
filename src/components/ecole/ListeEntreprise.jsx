@@ -33,13 +33,7 @@ function createData(num_siret,nom_entreprise,email,telephone,addresse,statut_jur
   };
 }
 
-/*const rows = [
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma','0706206148', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', '0706206148','Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', '0706206148', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', '0706206148', 'Recherche'),
-  createData('G137338992', 'Youssef', 'Bouraoui', 'G137393892@um5.ac.ma', '0706206148', 'Recherche'),
-];*/
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -89,10 +83,10 @@ const headCells = [
     label: 'Adresse',
   },
   {
-    id:'statu_juridique',
+    id:'forme_juridique',
     numeric: false,
     disablePadding: false,
-    label: 'Statut juridique',
+    label: 'Forme juridique',
   },
 ];
 
@@ -187,7 +181,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Etudiants
+          Entreprises
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -275,7 +269,7 @@ export default function ListeEntreprise({entreprises}) {
       [...entreprises]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage,entreprises],
   );
 
   return (
@@ -308,7 +302,7 @@ export default function ListeEntreprise({entreprises}) {
         role="checkbox"
         aria-checked={isItemSelected}
         tabIndex={-1}
-        key={row.id}
+        key={row.NUM_ENTREPRISE}
         selected={isItemSelected}
         sx={{ cursor: 'pointer' }}
       >
@@ -322,13 +316,13 @@ export default function ListeEntreprise({entreprises}) {
           />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row.num_siret}
+          {row.NUM_ENTREPRISE}
         </TableCell>
-        <TableCell align="left">{row.nom_entreprise}</TableCell>
-        <TableCell align="left">{row.email}</TableCell>
-        <TableCell align="left">{row.telephone}</TableCell>
-        <TableCell align="left">{row.addresse}</TableCell>
-        <TableCell align="left">{row.statut_juridique}</TableCell>
+        <TableCell align="left">{row.NOM_ENTREPRISE}</TableCell>
+        <TableCell align="left">{row.EMAIL}</TableCell>
+        <TableCell align="left">{row.TELEPHONE}</TableCell>
+        <TableCell align="left">{row.ADDRESSE}</TableCell>
+        <TableCell align="left">{row.FORME_JURIDIQUE}</TableCell>
       </TableRow>
     );
   })}
