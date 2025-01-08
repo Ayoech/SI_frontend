@@ -21,8 +21,10 @@ const [openSidebarToggle, setOpenSidebarToggle] = useState(true)
   useEffect(()=>{
     const fetchdetails = async () => {
       try {
-        const data = await fetchPostulationDetails();
-        setEntreprises(data);
+        const reponse = await fetchPostulationDetails();
+        setPostulationDetails(reponse.data);
+        console.log(': ',PostulationDetails)
+        
       } catch (error) {
         setError(error.message);
       } finally {

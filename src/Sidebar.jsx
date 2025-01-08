@@ -45,21 +45,8 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
             <FaTasks className='icon mr-2' /> Postulations
           </Link>
         </li>
-        <li className='sidebar-list-item' style={{color: 'black'}}>
-          
-          <Link to={`/assignedFeedback/${email.email}`} className="flex items-center">
-            <FaComment className='icon mr-2' /> Feedback
-          </Link>
-          
-        </li>
-        <li className='sidebar-list-item ' style={{color: 'grey'}} >
-          
-          <Link to ={`/files/${email.email}`} className="flex items-center">
-          <TbFileUpload className='icon mr-2'/> Files
-          
-          </Link>
-          
-        </li>
+        
+        
         <li className='sidebar-list-item ' style={{color: 'grey'}}>
           
           <Link to ={`/student/Profile`} className="flex items-center">

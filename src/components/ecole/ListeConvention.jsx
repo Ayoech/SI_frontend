@@ -35,20 +35,20 @@ function createData(entreprise, etudiant, sujet) {
   return { entreprise, etudiant, sujet };
 }
 
-/*const rows = [
-  createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
-  createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
-  createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
-  createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
-  createData('Henceforth', 'YOUSSEF BOURAOUI', 'Développement'),
-  createData('Henceforth', 'YOUSSef', 'Développement'),
-];*/
-
 export default function ListeConvention({PostulationDetails}) {
   const handleGenerateConvention = async(row) => {
-    const { num_postulation,titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin } = row
-    const pdfFile = await generatePDF(titre,nom_etudiant,nom_entreprise, prenom_etudiant,date_debut,date_fin);
+    const { num_postulation, titre, nom_etudiant, nom_entreprise, prenom_etudiant, date_debut, date_fin } = row;
+    const pdfFile = await generatePDF(titre, nom_etudiant, nom_entreprise, prenom_etudiant, date_debut, date_fin);
     const response = await CreerConvention(pdfFile);
+  };
+
+  const handleAccept = (row) => {
+    console.log('Accepted:', row);
+  };
+
+  const handleReject = (row) => {
+    // Logic for rejecting the convention (e.g., update the status)
+    console.log('Rejected:', row);
   };
 
   const [selected, setSelected] = React.useState([]);
@@ -69,8 +69,9 @@ export default function ListeConvention({PostulationDetails}) {
     setDense(event.target.checked);
   };
 
-  // Slice the rows based on pagination
-  const paginatedRows = PostulationDetails.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedRows = React.useMemo(() => {
+    return PostulationDetails.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }, [PostulationDetails, page, rowsPerPage]);
 
   return (
     <TableContainer component={Paper}>
@@ -83,21 +84,46 @@ export default function ListeConvention({PostulationDetails}) {
             <StyledTableCell align="right">Date de début</StyledTableCell>
             <StyledTableCell align="right">Date de fin</StyledTableCell>
             <StyledTableCell align="right">Convention</StyledTableCell>
+            <StyledTableCell align="right">Actions</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {paginatedRows.map((row) => (
-            <StyledTableRow key={row.num_entreprise}>
+            <StyledTableRow key={row.NUM_POSTULATION}>
               <StyledTableCell component="th" scope="row">
-                {row.nom_entreprise}
+                {row.NOM_ENTREPRISE}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.nom_etudiant} {row.prenom_etudiant}</StyledTableCell>
-              <StyledTableCell align="right">{row.titre}</StyledTableCell>
-              <StyledTableCell align="right">{row.date_debut}</StyledTableCell>
-              <StyledTableCell align="right">{row.date_fin}</StyledTableCell>
+              <StyledTableCell align="right">{row.NOM_ETUDIANT} {row.PRENOM_ETUDIANT}</StyledTableCell>
+              <StyledTableCell align="right">{row.TITRE}</StyledTableCell>
+              <StyledTableCell align="right">{row.DATE_DEBUT.split('T')[0]}</StyledTableCell>
+              <StyledTableCell align="right">{row.DATE_FIN.split('T')[0]}</StyledTableCell>
               <StyledTableCell align="right">
-                <Button variant="contained" color="primary" onClick={handleGenerateConvention}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleGenerateConvention(row)}
+                  disabled={row.STATUT_ACCEPTATION !== 'Accepté'}
+                >
                   Générer
+                </Button>
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <div className='mr-2'>
+                <Button
+                  variant="contained"
+                  color="success"
+                  className='mr-2'
+                  onClick={() => handleAccept(row)}
+                >
+                  Accepter
+                </Button>
+                </div>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleReject(row)}
+                >
+                  Refuser
                 </Button>
               </StyledTableCell>
             </StyledTableRow>
