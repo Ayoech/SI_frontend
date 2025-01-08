@@ -10,7 +10,8 @@ import Paper from '@mui/material/Paper';
 import generatePDF from '../../Services/GenererConvention';
 import { Button } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
-import CreerConvention from '../../Services/CreerConvention'
+import CreerConvention from '../../Services/CreerConvention';
+import MettreAJourEtatAcceptation from '../../Services/MettreAJourEtatAcceptation';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,18 +38,12 @@ function createData(entreprise, etudiant, sujet) {
 
 export default function ListeConvention({PostulationDetails}) {
   const handleGenerateConvention = async(row) => {
-    const { num_postulation, titre, nom_etudiant, nom_entreprise, prenom_etudiant, date_debut, date_fin } = row;
-    const pdfFile = await generatePDF(titre, nom_etudiant, nom_entreprise, prenom_etudiant, date_debut, date_fin);
-    const response = await CreerConvention(pdfFile);
-  };
-
-  const handleAccept = (row) => {
-    console.log('Accepted:', row);
-  };
-
-  const handleReject = (row) => {
-    // Logic for rejecting the convention (e.g., update the status)
-    console.log('Rejected:', row);
+    console.log(row)
+    console.log(row.NUM_POSTULATION)
+   const response = await CreerConvention(row.NUM_POSTULATION,row.TITRE, row.NOM_ETUDIANT,
+     row.NOM_ENTREPRISE,row.PRENOM_ETUDIANT, 
+     row.DATE_DEBUT.split('T')[0], row.DATE_FIN.split('T')[0],row.FILIERE,row.ADDRESSE);
+  
   };
 
   const [selected, setSelected] = React.useState([]);
@@ -68,6 +63,14 @@ export default function ListeConvention({PostulationDetails}) {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+
+  const handleRefuserclick= async(row)=>{
+    const response = await MettreAJourEtatAcceptation('Rejetée',row.NUM_POSTULATION)
+  }
+
+  const handleAccepterclick= async(row)=>{
+    const response = await MettreAJourEtatAcceptation('Accepté',row.NUM_POSTULATION)
+  }
 
   const paginatedRows = React.useMemo(() => {
     return PostulationDetails.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -102,26 +105,25 @@ export default function ListeConvention({PostulationDetails}) {
                   variant="contained"
                   color="primary"
                   onClick={() => handleGenerateConvention(row)}
-                  disabled={row.STATUT_ACCEPTATION !== 'Accepté'}
+                  disabled={row.ETAT_ACCEPTATION !== 'Accepté'}
                 >
                   Générer
                 </Button>
               </StyledTableCell>
               <StyledTableCell align="right">
-                <div className='mr-2'>
                 <Button
                   variant="contained"
                   color="success"
                   className='mr-2'
-                  onClick={() => handleAccept(row)}
+                  onClick={()=>handleAccepterclick(row)}
                 >
                   Accepter
                 </Button>
-                </div>
+                
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={() => handleReject(row)}
+                  onClick={()=>handleRefuserclick(row)}
                 >
                   Refuser
                 </Button>

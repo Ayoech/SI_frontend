@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
 import axios from 'axios';
+import ManageOffersService from '../../Services/ManageOffers';
 
 const ManageOffers = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
@@ -15,24 +16,18 @@ const ManageOffers = () => {
   };
 
   useEffect(() => {
-    // Retrieve num_entreprise from localStorage
-    const num_entreprise = localStorage.getItem('num_entreprise');
-    
-    if (num_entreprise) {
-      // Fetch offers for the entreprise using num_entreprise
-      axios.get(`http://localhost:5000/entreprises/offers/${num_entreprise}`)
-        .then(response => {
-          setOffres(response.data.data);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error("Error fetching offers:", error);
-          setLoading(false);
-        });
-    } else {
-      console.log("num_entreprise not found in localStorage");
-      setLoading(false);
+    const getOffers = async()=>{
+      try{
+        const response = await ManageOffersService();
+        setOffres(response.data);
+        console.log(response.data);
+      }catch(error){
+        console.error('')
+      }finally{
+        setLoading(false)
+      }
     }
+    getOffers();
   }, []);
 
   return (
@@ -63,20 +58,20 @@ const ManageOffers = () => {
               <tbody>
                 {offres.length > 0 ? (
                   offres.map((offer, index) => (
-                    <tr key={offer.num_offre} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                    <tr key={offer.NUM_OFFRE} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
                       <td className="border border-gray-300 px-4 py-2">
                         <Link
-                          to={`/offer-details/${offer.num_offre}`}
+                          to={`/offer-details/${offer.NUM_OFFRE}`}
                           className="text-blue-500 hover:underline"
                         >
-                          {offer.num_offre}
+                          {offer.NUM_OFFRE}
                         </Link>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.description}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.domaine}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.date_debut}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.date_fin}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.etat_offre}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.DESCRIPTION}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.DOMINE}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.DATE_DEBUT.split("T")[0]}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.DATE_FIN.split("T")[0]}</td>
+                      <td className="border border-gray-300 px-4 py-2">{offer.ETAT_OFFRE}</td>
                       <td className="border border-gray-300 px-4 py-2">
                         <button
                           className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"

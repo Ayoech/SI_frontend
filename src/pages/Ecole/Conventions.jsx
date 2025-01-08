@@ -3,6 +3,7 @@ import EcoleSidebar from '../../components/ecole/EcoleSidebar';
 import Header from '../../Header';
 import Homy from '../../Homy';
 import ListeConvention from '../../components/ecole/ListeConvention';
+import fetchPostulationDetails from '../../Services/PostulationDetails'
 
 
 

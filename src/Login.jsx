@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LoginService } from './Services/LoginService';
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -15,51 +16,38 @@ function Login() {
     border: '1px solid #ccc',
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      // Prepare data to be sent to the backend
-      const response = await fetch('http://localhost:3000/api/v1/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: loginData.email,
-          password: loginData.password,
-        }),
-      });
-
-      // Parse the response from the backend
-      const result = await response.json();
-
-      // Handle case if login fails
-      if (response.status !== 200) {
-        setLoginresponseData(result.message);
-      } else {
-        // If successful, store JWT in local storage
-        const { token, role, email, userId } = result;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify({ role, email, userId }));
-
-        // Navigate based on user role
-        if (role === 'A_ECOLE') {
-          navigate('/ecole');
-        } else if (role === 'A_ENTREPRISE') {
-          navigate('/entreprise');
-        } else if (role === 'ETUDIANT') {
-          navigate('/student/Profile');
-        } else if (role === 'G_ENTREPRISE') {
-          navigate('/entreprise');
-        } else {
-          console.error('Unknown role:', role);
-        }
+  
+  const handleLogin = async(e)=>{
+    e.preventDefault(); 
+    try{
+      const response = await LoginService(loginData);
+      console.log(response);
+      const user = JSON.parse(localStorage.getItem('user')); 
+      const token = localStorage.getItem('token');
+          if (response.data.message === "invalid username or password") {
+              setLoginresponseData(response.data.message);
+              
+          } else {
+              console.log('Welcome');
+              const role = user.role; 
+              if (role === 'A_ECOLE') {
+                  navigate('/ecole/etudiants');
+              } else if (role === 'A_ENTREPRISE') {
+                  navigate('/entreprise');
+              } else if(role === 'ETUDIANT'){
+                  navigate('/student/Profile');
+              }
+              else if(role === 'G_ENTREPRISE'){
+                navigate('/entreprise');
+            }
+              else {
+                  console.error('Unknown role:', role);
+              }
+          }
+      } catch (error) {
+            console.log(error);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
 
   return (
     <div id='log'>

@@ -39,13 +39,12 @@ const CvForme = ({ profileData }) => {
   };
 
   const handleRemoveCv = () => {
-    // Logic to remove the CV (e.g., update the profileData, call a backend API to delete the CV, etc.)
     console.log('Remove CV');
   };
 
   const handleViewCv = () => {
-    // Logic to view the CV (e.g., open in a new tab)
-    window.open(profileData?.cv_path, '_blank');
+    const cvUrl = `http://localhost:5173/${profileData?.cv_path}`;  
+    window.open(cvUrl, '_blank');
   };
 
   return (
