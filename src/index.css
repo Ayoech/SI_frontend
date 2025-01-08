@@ -124,7 +124,7 @@ li {
 }
 #log {
   font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, rgb(13, 42, 32), rgb(20,239,230));
+  background-color: white;
   color: #333;
   display: flex;
   justify-content: center;
