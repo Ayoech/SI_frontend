@@ -85,7 +85,7 @@ const headCells = [
     id: 'etat_acceptation',
     numeric: false,
     disablePadding: false,
-    label: 'Réponse de l\'école',
+    label: 'Convention',
   }
 ];
 
@@ -180,7 +180,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Mes Postulations
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -259,6 +259,11 @@ export default function ListePostulation({postulations} ) {
     setDense(event.target.checked);
   };
 
+  const handleGenerateConvention = (row) => {
+    const url = `http://localhost:5173/${row?.PDF_PATH}`; 
+    window.open(url,'_blank')
+  }; 
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - postulations.length) : 0;
@@ -328,7 +333,11 @@ export default function ListePostulation({postulations} ) {
         </TableCell>
         <TableCell align="left">
           {row.ETAT_ACCEPTATION === 'En attente' && 'En attente'}
-          {row.ETAT_ACCEPTATION === 'Accepté' && 'Stage accepté'}
+          {row.ETAT_ACCEPTATION === 'Accepté' && (<button className='rounded px-4 py-2 bg-black text-white'
+           onClick={(event)=>{
+            event.stopPropagation();
+            handleGenerateConvention(row);}}>
+            Générer Votre Convention</button> )}
           {row.ETAT_ACCEPTATION === 'Rejeté' && 'Stage rejeté'}
         </TableCell>
       </TableRow>
