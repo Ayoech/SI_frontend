@@ -1,51 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Header from './Header'; // Adjust the import path if needed
-import Sideent from './Sideent'; // Adjust the import path if needed
-
+import Header from "./Header"; // Adjust the import path if needed
+import Sideent from "./Sideent"; // Adjust the import path if needed
+import { fetchApplicants } from "./Services/fetchApplicants"; // Adjust the import path if needed
+import { scheduleInterview,  handleReject,  handleAccept } from './Services/PostulationService'; // Import the functions
 const OfferDetails = () => {
-  const { offerId } = useParams();  // Get the offer ID from the URL params
-  const [applicants, setApplicants] = useState([
-    { id: 1, nom: 'John', prenom: 'Doe', lettre_motivation: 'motivation1.pdf', cv_path: 'cv1.pdf', status: 'Pending' },
-    { id: 2, nom: 'Jane', prenom: 'Smith', lettre_motivation: 'motivation2.pdf', cv_path: 'cv2.pdf', status: 'Pending' },
-    { id: 3, nom: 'Michael', prenom: 'Johnson', lettre_motivation: 'motivation3.pdf', cv_path: 'cv3.pdf', status: 'Pending' }
-  ]);
+  const { offerId } = useParams(); // Get the offer ID from the URL params
+  const [applicants, setApplicants] = useState([]);
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
 
-  // Open or close sidebar
+  // Fetch applicants when the component mounts
+  useEffect(() => {
+    const loadApplicants = async () => {
+      try {
+        const responseData = await fetchApplicants(offerId);
+        console.log(offerId)
+        if (responseData.success) {
+          const formattedApplicants = responseData.data.map((applicant) => ({
+            id: applicant.NUM_POSTULATION,
+            nom: applicant.NOM,
+            prenom: applicant.PRENOM,
+            lettre_motivation: applicant.LETTRE_MOTIVATION,
+            cv_path:  applicant.CV_PATH, // Replace with actual CV path if available
+            status: "Pending",
+          }));
+          setApplicants(formattedApplicants);
+          console.log(applicants);
+        }
+      } catch (error) {
+        console.error("Failed to load applicants:", error.message);
+      }
+    };
+
+    loadApplicants();
+  }, [offerId]);
+
+  // Sidebar toggle
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
-  // Handle Accept button click
-  const handleAccept = (applicantId) => {
-    setApplicants(applicants.map((applicant) =>
-      applicant.id === applicantId ? { ...applicant, status: 'Accepted' } : applicant
-    ));
-    console.log(`Accepted applicant ${applicantId}`);
-  };
-
-  // Handle Reject button click
-  const handleReject = (applicantId) => {
-    setApplicants(applicants.map((applicant) =>
-      applicant.id === applicantId ? { ...applicant, status: 'Rejected' } : applicant
-    ));
-    console.log(`Rejected applicant ${applicantId}`);
-  };
-
-  // Handle Interview button click
-  const handleInterview = (applicantId) => {
-    setApplicants(applicants.map((applicant) =>
-      applicant.id === applicantId ? { ...applicant, status: 'Interview Scheduled' } : applicant
-    ));
-    console.log(`Scheduled interview for applicant ${applicantId}`);
-  };
+  // Other component code (actions like Accept, Reject, Interview)...
 
   return (
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-      <div className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}>
+      <div
+        className={`flex justify-center items-start ${
+          openSidebarToggle ? "ml-[56rem] mt-[4rem] pt-[0.1rem]" : "ml-[16rem]"
+        }`}
+      >
         <div className="rounded-lg p-24 max-w-6xl">
           <h1 className="text-2xl font-semibold mb-4">Applicants for Offer {offerId}</h1>
 
@@ -70,7 +75,7 @@ const OfferDetails = () => {
                     <td className="border border-gray-300 px-8 py-2">
                       <button
                         onClick={() => handleAccept(applicant.id)}
-                        className="bg-green-500 text-white  mb-2 px-3 py-1 rounded hover:bg-green-600 mr-2"
+                        className="bg-green-500 text-white mb-2 px-3 py-1 rounded hover:bg-green-600 mr-2"
                       >
                         Accept
                       </button>
@@ -81,7 +86,7 @@ const OfferDetails = () => {
                         Reject
                       </button>
                       <button
-                        onClick={() => handleInterview(applicant.id)}
+                        onClick={() => scheduleInterview(applicant.id)}
                         className="bg-blue-500 text-white px-3 mb-2 py-1 rounded hover:bg-blue-600"
                       >
                         Interview
@@ -91,7 +96,9 @@ const OfferDetails = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-4">No applicants found</td>
+                  <td colSpan="5" className="text-center py-4">
+                    No applicants found
+                  </td>
                 </tr>
               )}
             </tbody>

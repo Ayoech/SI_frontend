@@ -8,7 +8,7 @@ const ManageOffersService = async() =>  {
         const token = localStorage.getItem("token");
         console.log('is there a problem')
         console.log("user:", user, "token:", token);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/entreprise/alloffers`,{
+        const response = await axios.get(`http://localhost:3000/api/v1/entreprise/alloffers`,{
             params: { num_utilisateur:user.userId },
             headers: {
                 Authorization: `Bearer ${token}` 
