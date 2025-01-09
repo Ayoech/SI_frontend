@@ -42,7 +42,7 @@ function App() {
         <Route path='/ecole/entreprises' element={<Entreprise />} />
         <Route path='/entreprise/gestform' element={<Gestionnaire />} />
         <Route path='/ecole/statistics' element={<Statistics />} />
-        <Route path="/offer-details/:num_offre" element={<OfferDetails />} />
+        <Route path="/offer-details/:offerId" element={<OfferDetails />} />
         
       </Routes>
     </Router>

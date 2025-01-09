@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
+import Homy from '../../Homy';
+import creerGestionnaireEntreprise from '../../Services/CreerGestionnaire'; // Using the provided function
 
 const Gestionnaire = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
@@ -10,90 +12,133 @@ const Gestionnaire = () => {
     prenom: '',
     email: '',
   });
+  const [internalAccounts, setInternalAccounts] = useState([]);
+  const [numUtilisateur, setNumUtilisateur] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
+  // Retrieve user ID from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('JWT token not found. Please login.');
+      return;
+    }
+
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.userId) {
+        setNumUtilisateur(user.userId);
+      } else {
+        console.error('numUtilisateur not found in user data.');
+      }
+    } catch (error) {
+      console.error('Error decoding user data:', error.message);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    if (!numUtilisateur) {
+      setErrorMessage('User ID not found. Please ensure you are logged in.');
+      return;
+    }
+
+
     try {
-      const response = await axios.post('/api/internal-accounts', formData);
-      alert(response.data.message || 'Account created successfully');
+      const num_utilisateur = numUtilisateur;
+      // Use the provided `creerGestionnaireEntreprise` function
+      const response = await creerGestionnaireEntreprise({ ...formData, num_utilisateur });
+      setInternalAccounts((prevAccounts) => [...prevAccounts, formData]);
+      setSuccessMessage('Internal account created successfully!');
+      setFormData({ nom: '', prenom: '', email: '' }); // Reset form fields
     } catch (error) {
-      console.error('Error creating account:', error.message);
-      alert('Error creating account.');
+      console.error('Error creating internal account:', error);
+      setErrorMessage('Failed to create internal account. Please try again.');
     }
   };
 
   return (
-    <div className='grid-container'>
+    <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-      <div className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}>
-        <div className='rounded-lg p-24 max-w-6xl'>
-          <form onSubmit={handleSubmit}>
-            <div className='mb-4'>
-              <label htmlFor='nom' className='block font-medium' style={{ width: '200px' }}>
+      <div
+        className={`flex flex-col items-center min-h-screen bg-gray-100 ${
+          openSidebarToggle ? 'ml-[36rem]' : 'ml-[16rem]'
+        } mt-32`}
+      >
+        <div className="p-6 rounded-md w-full" style={{ width: '600px' }}>
+          <h2 className="text-2xl font-semibold mb-6">Create Internal Account</h2>
+          <form onSubmit={handleSubmit} className="mb-6">
+            <div className="mb-4">
+              <label htmlFor="nom" className="block font-medium">
                 Nom
               </label>
               <input
-                type='text'
-                name='nom'
-                id='nom'
+                type="text"
+                name="nom"
+                id="nom"
                 value={formData.nom}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded'
-                style={{ width: '400px' }}
+                className="mt-1 p-2 w-full border border-gray-300 rounded"
                 required
               />
             </div>
-            <div className='mb-4'>
-              <label htmlFor='prenom' className='block font-medium' style={{ width: '200px' }}>
+            <div className="mb-4">
+              <label htmlFor="prenom" className="block font-medium">
                 Prénom
               </label>
               <input
-                type='text'
-                name='prenom'
-                id='prenom'
+                type="text"
+                name="prenom"
+                id="prenom"
                 value={formData.prenom}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded'
-                style={{ width: '400px' }}
+                className="mt-1 p-2 w-full border border-gray-300 rounded"
                 required
               />
             </div>
-            <div className='mb-4'>
-              <label htmlFor='email' className='block font-medium' style={{ width: '200px' }}>
+            <div className="mb-4">
+              <label htmlFor="email" className="block font-medium">
                 Email
               </label>
               <input
-                type='email'
-                name='email'
-                id='email'
+                type="email"
+                name="email"
+                id="email"
                 value={formData.email}
                 onChange={handleChange}
-                className='mt-1 p-2 w-full border border-gray-300 rounded'
-                style={{ width: '400px' }}
+                className="mt-1 p-2 w-full border border-gray-300 rounded"
                 required
               />
             </div>
-            <div className="flex justify-center mt-12" style={{ width: '400px' }}>
-              <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
+            <div className="flex justify-center">
+              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                 Create Account
               </button>
             </div>
           </form>
+
+          {successMessage && <p className="text-green-500">{successMessage}</p>}
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+
+          
+          
         </div>
       </div>
+      <Homy />
     </div>
   );
 };
