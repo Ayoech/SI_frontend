@@ -34,7 +34,7 @@ const CreateOffer = () => {
         setNumUtilisateur(user.userId);
       } else {
         console.error('num_utilisateur not found in token.');
-      }c
+      }
     } catch (error) {
       console.error('Error decoding token:', error.message);
     }

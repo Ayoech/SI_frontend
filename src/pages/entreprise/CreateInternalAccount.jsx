@@ -1,127 +1,124 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
 import Homy from '../../Homy';
-import creerGestionnaireEntreprise from '../../Services/CreerGestionnaire'; // Import the backend call function
-import { Link } from 'react-router-dom';
 
-const CreateInternalAccount = () => {
+const GestionnaireList = () => {
+  const [gestionnaires, setGestionnaires] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
-  const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
-  });
-  const [internalAccounts, setInternalAccounts] = useState([]);
-  const [numUtilisateur, setNumUtilisateur] = useState(null); // To store user ID
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+
+  const fetchGestionnaires = async () => {
+    try {
+      setLoading(true);
+  
+      // Retrieve user details from local storage
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.userId;
+  
+      if (!userId) {
+        console.error("userId not found in local storage.");
+        setError("Failed to retrieve user information.");
+        return;
+      }
+  
+      // Make a GET request with userId in the URL
+      const response = await axios.get(`http://localhost:3000/api/v1/entreprise/getgestionnaire/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure the token is included in the headers
+        },
+      });
+  
+      // Set the retrieved gestionnaires
+      setGestionnaires(response.data.data || []);
+    } catch (err) {
+      console.error('Error fetching gestionnaires:', err);
+      setError('Failed to fetch gestionnaires.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (nom) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.userId; // Extract userId from local storage
+  
+      if (!userId) {
+        console.error("userId not found in local storage.");
+        return;
+      }
+  
+      const response = await axios.delete(`http://localhost:3000/api/v1/entreprise/deletegestionnaire`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        data: { userId, nom }, // Send the `userId` and `nom` in the request body
+      });
+  
+      if (response.status === 200) {
+        alert('Gestionnaire deleted successfully!');
+        fetchGestionnaires(); // Refresh the list after deletion
+      }
+    } catch (err) {
+      console.error('Error deleting gestionnaire:', err);
+      alert('Failed to delete gestionnaire.');
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchGestionnaires();
+  }, []);
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
-  };
-
-  // Retrieve user ID from localStorage
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('JWT token not found. Please login.');
-      return;
-    }
-
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user && user.userId) {
-        setNumUtilisateur(user.userId);
-      } else {
-        console.error('numUtilisateur not found in user data.');
-      }
-    } catch (error) {
-      console.error('Error decoding user data:', error.message);
-    }
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage('');
-    setSuccessMessage('');
-
-    if (!numUtilisateur) {
-      setErrorMessage('User ID not found. Please ensure you are logged in.');
-      return;
-    }
-
-    try {
-      const response = await creerGestionnaireEntreprise({ ...formData, numUtilisateur });
-
-      setInternalAccounts((prevAccounts) => [...prevAccounts, formData]);
-      setSuccessMessage('Internal account created successfully!');
-      setFormData({ nom: '', prenom: '', email: '' }); // Reset form fields
-    } catch (error) {
-      console.error('Error creating internal account:', error);
-      setErrorMessage('Failed to create internal account. Please try again.');
-    }
   };
 
   return (
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
+      
       <div
-        className={`flex flex-col items-center min-h-screen bg-gray-100 ${
-          openSidebarToggle ? 'ml-[36rem]' : 'ml-[16rem]'
-        } mt-32`}
+        className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
       >
-        <div className="mt-16 ml-88 p-6 rounded-md w-full" style={{ width: '600px', marginLeft: '700px' }}>
-          <div className="flex justify-left mb-12 ml-4" style={{ width: '200px' }}>
-            <Link to="/entreprise/gestform">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Create new account
-              </button>
-            </Link>
-          </div>
+        <div className="container mx-auto p-6 " style={{width: "600px", marginTop: "100px"}}>
           
-          {successMessage && (
-            <div className="mt-4 text-green-500">
-              <p>{successMessage}</p>
-            </div>
-          )}
-          {errorMessage && (
-            <div className="mt-4 text-red-500">
-              <p>{errorMessage}</p>
-            </div>
-          )}
-          <table className="w-full border-collapse border border-gray-200 mt-8">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 px-4 py-2 text-center" style={{ width: '500px' }}>Nom</th>
-                <th className="border border-gray-300 px-4 py-2 text-center" style={{ width: '500px' }}>Prénom</th>
-                <th className="border border-gray-300 px-4 py-2 text-center" style={{ width: '500px' }}>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {internalAccounts.length > 0 ? (
-                internalAccounts.map((account, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-300 px-4 py-2">{account.nom}</td>
-                    <td className="border border-gray-300 px-4 py-2">{account.prenom}</td>
-                    <td className="border border-gray-300 px-4 py-2">{account.email}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="text-center py-4">
-                    No internal accounts added yet.
-                  </td>
+          
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <table className="table-auto border-collapse w-full">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border px-4 py-2">Nom</th>
+                  <th className="border px-4 py-2">Prénom</th>
+                  <th className="border px-4 py-2">Action</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {gestionnaires.map((gestionnaire, index) => (
+                  <tr key={index}>
+                    <td className="border px-4 py-2">{gestionnaire.NOM}</td>
+                    <td className="border px-4 py-2">{gestionnaire.PRENOM}</td>
+                    <td className="border px-4 py-2">
+                      <button
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                        onClick={() => handleDelete(gestionnaire.NOM)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
       <Homy />
@@ -129,4 +126,4 @@ const CreateInternalAccount = () => {
   );
 };
 
-export default CreateInternalAccount;
+export default GestionnaireList;

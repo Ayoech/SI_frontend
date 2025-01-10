@@ -12,7 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import EcoleSidebar from './EcoleSidebar';
-import axios from 'axios'; // For making HTTP requests
+import axios from 'axios';
 
 // Register the components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -20,8 +20,8 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const DomainStatistics = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
   const [chartData, setChartData] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -32,18 +32,26 @@ const DomainStatistics = () => {
     const fetchDomainStatistics = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/v1/ecole/statistics', {
+        const response = await axios.get('http://localhost:3000/api/v1/ecole/statistics', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Adjust if JWT token is stored differently
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
-        const data = response.data.data; // Assuming the response structure is { success: true, data: [...] }
-        
+    
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error('Invalid data format received from API');
+        }
+    
+        const data = response.data.data;
+        console.log(data);
+    
+        // Calculate total count
+        const totalCount = data.reduce((sum, item) => sum + item.COUNT, 0);
+    
         // Transform data into chart-compatible format
-        const labels = data.map((item) => item.domain);
-        const percentages = data.map((item) => item.percentage);
-
+        const labels = data.map((item) => item.DOMAINE || 'Unknown');
+        const percentages = data.map((item) => ((item.COUNT / totalCount) * 100).toFixed(2));
+    
         // Update the chart data state
         setChartData({
           labels,
@@ -78,6 +86,7 @@ const DomainStatistics = () => {
         setLoading(false);
       }
     };
+    
 
     fetchDomainStatistics();
   }, []);
@@ -93,6 +102,9 @@ const DomainStatistics = () => {
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          callback: (value) => `${value}%`, // Add '%' to the y-axis ticks
+        },
       },
     },
   };
