@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginService } from './Services/LoginService';
+import Spinner from './components/Spinner';
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -8,6 +9,7 @@ function Login() {
     password: '',
   });
   const [loginresponseData, setLoginresponseData] = useState('');
+  const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
 
   const inputStyle = {
@@ -20,6 +22,7 @@ function Login() {
   const handleLogin = async(e)=>{
     e.preventDefault(); 
     try{
+      setLoading(true)
       const response = await LoginService(loginData);
       console.log(response);
       const user = JSON.parse(localStorage.getItem('user')); 
@@ -46,6 +49,8 @@ function Login() {
           }
       } catch (error) {
             console.log(error);
+      }finally{
+        setLoading(false)
       }
     }
 
@@ -83,8 +88,8 @@ function Login() {
                 required
               />
             </div>
-            <button type='submit' className='login-btn' onClick={handleLogin}>
-              Login
+            <button type='submit' className='login-btn' onClick={handleLogin} disabled={loading}>
+              {loading?<Spinner/>:'Login'}
             </button>
           </form>
           <div className='links'>

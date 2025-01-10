@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { updateProfileByEtudiant } from '../../Services/updateProfileByEtudiant';
 import { useState } from 'react';
+import Spinner  from '../Spinner'
 
 const ProfileForme = ({profileData}) => {
 
@@ -113,7 +114,7 @@ const ProfileForme = ({profileData}) => {
               <ErrorMessage name="statut" component="div" style={{ color: 'red' }} />
             </div>
           <div className='font-semibold text-xl mb-4' style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded'>{isSubmitting ? 'Enregistrement...' : 'Enregistrer'}</button>
+          <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded' disabled={isSubmitting}>{isSubmitting ? <Spinner/> : 'Enregistrer'}</button>
           </div>
         </Form>
       </Formik>

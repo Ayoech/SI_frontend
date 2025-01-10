@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import UploadCv from '../../Services/UploadCv';
+import Spinner from '../Spinner';
 
 const CvForme = ({ profileData }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -95,8 +96,8 @@ const CvForme = ({ profileData }) => {
             )}
 
             <div className='font-semibold text-xl mb-4' style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-              <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded'>
-                {submitting ? 'Uploading...' : 'Télécharger'}
+              <button type="submit" className='text-center text-white bg-blue-500 px-4 py-3 rounded' disabled={submitting}>
+                {submitting ? <Spinner/> : 'Télécharger'}
               </button>
             </div>
           </Form>
