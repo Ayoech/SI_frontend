@@ -73,12 +73,30 @@ const ManageOffers = () => {
                       <td className="border border-gray-300 px-4 py-2">{offer.DATE_FIN.split("T")[0]}</td>
                       <td className="border border-gray-300 px-4 py-2">{offer.ETAT_OFFRE}</td>
                       <td className="border border-gray-300 px-4 py-2">
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                        >
-                          Change Status
-                        </button>
-                      </td>
+  <button
+    onClick={() => {
+      axios.put(
+        `http://localhost:3000/api/v1/entreprise/editoffer`,
+        { offerId: offer.NUM_OFFRE },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+      .then(response => {
+        alert("Offer status updated");
+      })
+      .catch(error => {
+        alert("Failed to update offer status");
+      });
+    }}
+    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+  >
+    Change Status
+  </button>
+</td>
+
                     </tr>
                   ))
                 ) : (
