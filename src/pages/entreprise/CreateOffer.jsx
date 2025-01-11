@@ -80,8 +80,8 @@ const CreateOffer = () => {
           openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'
         }`}
       >
-        <div className="rounded-lg p-24 max-w-6xl">
-          <form onSubmit={handleSubmit}>
+        <div className="rounded-lg p-24 ml-28 mt-16 max-w-6xl" >
+          <form onSubmit={handleSubmit} style={{display: "grid",   gridTemplateColumns: "repeat(2, 1fr)", gridTemplateRows: "repeat(2, 1fr)", gap: "30px" }}>
             <div className="mb-4">
               <label htmlFor="titre" className="block font-medium" style={{ width: '200px' }}>
                 Titre
@@ -112,7 +112,7 @@ const CreateOffer = () => {
             </div>
             <div className="mb-4">
               <label htmlFor="date_debut" className="block font-medium" style={{ width: '200px' }}>
-                Start Date
+                Date début
               </label>
               <input
                 type="date"
@@ -126,7 +126,7 @@ const CreateOffer = () => {
             </div>
             <div className="mb-4">
               <label htmlFor="date_fin" className="block font-medium" style={{ width: '200px' }}>
-                End Date
+                Date fin
               </label>
               <input
                 type="date"
@@ -139,8 +139,8 @@ const CreateOffer = () => {
               />
             </div>
 
-            <div className="flex justify-center mt-12" style={{ width: '400px' }}>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <div className="flex justify-center mt-12" style={{ width: '550px', position: "absolute"}}>
+              <button type="submit"  style= {{marginLeft: "260px", padding:"10px", width:"200px"}}className="bg-blue-500 text-white px-28 py-8 mt-52 ml-64 rounded hover:bg-blue-600">
                 Create Offer
               </button>
             </div>

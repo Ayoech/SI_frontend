@@ -37,8 +37,8 @@ const ManageOffers = () => {
       <div
         className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
       >
-        <div className="rounded-lg p-24 max-w-6xl">
-          <h1 className="text-2xl font-semibold mb-4">Liste des Offres</h1>
+        <div className="rounded-lg p-24 mt-8 ml-28">
+          
 
           {loading ? (
             <p>Loading...</p>
@@ -46,33 +46,33 @@ const ManageOffers = () => {
             <table className="min-w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="border border-gray-300 px-8 py-2">Numéro de l'offre</th>
-                  <th className="border border-gray-300 px-8 py-2">Description</th>
-                  <th className="border border-gray-300 px-8 py-2">Domaine</th>
-                  <th className="border border-gray-300 px-8 py-2">Date de début</th>
-                  <th className="border border-gray-300 px-8 py-2">Date de fin</th>
-                  <th className="border border-gray-300 px-8 py-2">État de l'offre</th>
-                  <th className="border border-gray-300 px-8a py-2">Actions</th>
+                  <th className="border border-gray-300 px-12 py-2">Numéro</th>
+                  <th className="border border-gray-300 px-12 py-2">Description</th>
+              
+                  <th className="border border-gray-300 px-12 py-2">Début</th>
+                  <th className="border border-gray-300 px-12 py-2">Fin</th>
+                  <th className="border border-gray-300 px-12 py-2">État</th>
+                  <th className="border border-gray-300 px-12 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {offres.length > 0 ? (
                   offres.map((offer, index) => (
                     <tr key={offer.NUM_OFFRE} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                      <td className="border border-gray-300 px-4 py-2">
-                        <Link
+                      <td className="border text-center border-gray-300 px-4 py-2">
+                        <Link 
                           to={`/offer-details/${offer.NUM_OFFRE}`}
-                          className="text-blue-500 hover:underline"
+                          className="text-blue-500  hover:underline"
                         >
                           {offer.NUM_OFFRE}
                         </Link>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.DESCRIPTION}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.DOMINE}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.DATE_DEBUT.split("T")[0]}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.DATE_FIN.split("T")[0]}</td>
-                      <td className="border border-gray-300 px-4 py-2">{offer.ETAT_OFFRE}</td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border text-center border-gray-300 px-4 py-2">{offer.DESCRIPTION}</td>
+                      
+                      <td className="border text-center border-gray-300 px-4 py-2">{offer.DATE_DEBUT.split("T")[0]}</td>
+                      <td className="border border-gray-300 text-center px-4 py-2">{offer.DATE_FIN.split("T")[0]}</td>
+                      <td className="border border-gray-300 text-center px-4 py-2">{offer.ETAT_OFFRE}</td>
+                      <td className="border border-gray-300 text-center px-4 py-2">
   <button
     onClick={() => {
       axios.put(

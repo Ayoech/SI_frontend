@@ -44,13 +44,7 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
             <FaTasks className='icon mr-2' /> View offers
           </Link>
         </li>
-        <li className='sidebar-list-item' style={{color: 'balack'}}>
-          
-          <Link to={'/student/Applications'} className="flex items-center">
-            <FaComment className='icon mr-2' /> Applicants
-          </Link>
-          
-        </li>
+        
         <li className='sidebar-list-item ' style={{color: 'grey'}} >
           
           <Link to ={'/entreprise/interne'} className="flex items-center">
