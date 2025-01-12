@@ -76,11 +76,11 @@ const Gestionnaire = () => {
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
         className={`flex flex-col items-center min-h-screen bg-gray-100 ${
-          openSidebarToggle ? 'ml-[36rem]' : 'ml-[16rem]'
+          openSidebarToggle ? 'ml-[52rem]' : 'ml-[16rem]'
         } mt-32`}
       >
-        <div className="p-6 rounded-md w-full" style={{ width: '600px' }}>
-          <h2 className="text-2xl font-semibold mb-6">Create Internal Account</h2>
+        <div className="p-6 ml-56 mt-12 " style={{ width: '500px' }}>
+      
           <form onSubmit={handleSubmit} className="mb-6">
             <div className="mb-4">
               <label htmlFor="nom" className="block font-medium">

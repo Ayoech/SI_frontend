@@ -3,7 +3,7 @@ import axios from 'axios';
 import Header from '../../Header';
 import Sideent from '../../Sideent';
 import Homy from '../../Homy';
-
+import { Link } from 'react-router-dom';
 const GestionnaireList = () => {
   const [gestionnaires, setGestionnaires] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,9 +83,14 @@ const GestionnaireList = () => {
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       
       <div
-        className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
+        className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[40rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
       >
-        <div className="container mx-auto p-6 " style={{width: "600px", marginTop: "100px"}}>
+        <Link to="/entreprise/gestform">
+        <button style= {{marginLeft: "20px",marginTop:"80px",  padding:"10px", width:"140px"}}className="bg-blue-500 text-white px-28 py-8 mt-52 ml-64 rounded hover:bg-blue-600">
+            Create manager
+          </button >
+          </Link>
+        <div className="container mx-auto p-6 " style={{width: "600px", marginTop: "90px"}}>
           
           
           {loading ? (
@@ -93,20 +98,21 @@ const GestionnaireList = () => {
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            <table className="table-auto border-collapse w-full">
+            
+            <table className="table-auto border-collapse w-full" style={{marginTop: "80px", marginLeft: "90px"}}>
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">Nom</th>
-                  <th className="border px-4 py-2">Prénom</th>
-                  <th className="border px-4 py-2">Action</th>
+                  <th className="border px-12 py-2">Nom</th>
+                  <th className="border px-12 py-2">Prénom</th>
+                  <th className="border px-12 py-2">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {gestionnaires.map((gestionnaire, index) => (
                   <tr key={index}>
-                    <td className="border px-4 py-2">{gestionnaire.NOM}</td>
-                    <td className="border px-4 py-2">{gestionnaire.PRENOM}</td>
-                    <td className="border px-4 py-2">
+                    <td className="border text-center px-4 py-2">{gestionnaire.NOM}</td>
+                    <td className="border text-center px-4 py-2">{gestionnaire.PRENOM}</td>
+                    <td className="border text-center px-4 py-2">
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded"
                         onClick={() => handleDelete(gestionnaire.NOM)}

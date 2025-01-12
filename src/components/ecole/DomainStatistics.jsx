@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import Header from '../../Header';
 
 import {
@@ -7,6 +7,8 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
@@ -15,11 +17,21 @@ import EcoleSidebar from './EcoleSidebar';
 import axios from 'axios';
 
 // Register the components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const DomainStatistics = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
-  const [chartData, setChartData] = useState(null);
+  const [domainChartData, setDomainChartData] = useState(null);
+  const [enterpriseChartData, setEnterpriseChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,32 +40,25 @@ const DomainStatistics = () => {
   };
 
   useEffect(() => {
-    // Fetch domain statistics from the backend
     const fetchDomainStatistics = async () => {
       try {
-        setLoading(true);
         const response = await axios.get('http://localhost:3000/api/v1/ecole/statistics', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-    
+
         if (!response.data || !Array.isArray(response.data.data)) {
           throw new Error('Invalid data format received from API');
         }
-    
+
         const data = response.data.data;
-        console.log(data);
-    
-        // Calculate total count
+
         const totalCount = data.reduce((sum, item) => sum + item.COUNT, 0);
-    
-        // Transform data into chart-compatible format
         const labels = data.map((item) => item.DOMAINE || 'Unknown');
         const percentages = data.map((item) => ((item.COUNT / totalCount) * 100).toFixed(2));
-    
-        // Update the chart data state
-        setChartData({
+
+        setDomainChartData({
           labels,
           datasets: [
             {
@@ -86,12 +91,46 @@ const DomainStatistics = () => {
         setLoading(false);
       }
     };
-    
+
+    const fetchEnterpriseEvolution = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/v1/entreprise/enterpriseevolution', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        const data = response.data.data;
+
+        let cumulativeTotal = 0;
+        const processedData = data.map(([date, count]) => {
+          cumulativeTotal += count;
+          return { date, total: cumulativeTotal };
+        });
+
+        setEnterpriseChartData({
+          labels: processedData.map((entry) => entry.date),
+          datasets: [
+            {
+              label: 'Total Number of Enterprises',
+              data: processedData.map((entry) => entry.total),
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: true,
+            },
+          ],
+        });
+      } catch (err) {
+        setError('Failed to fetch enterprise evolution data.');
+        console.error('Error fetching enterprise evolution data:', err);
+      }
+    };
 
     fetchDomainStatistics();
+    fetchEnterpriseEvolution();
   }, []);
 
-  const options = {
+  const barChartOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -103,7 +142,32 @@ const DomainStatistics = () => {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value) => `${value}%`, // Add '%' to the y-axis ticks
+          callback: (value) => `${value}%`,
+        },
+      },
+    },
+  };
+
+  const lineChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Date',
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Total Enterprises',
         },
       },
     },
@@ -126,7 +190,11 @@ const DomainStatistics = () => {
             ) : error ? (
               <p className="text-red-500">{error}</p>
             ) : (
-              <Bar data={chartData} options={options} />
+              <>
+                <Bar data={domainChartData} options={barChartOptions} />
+                <h2 className="text-center mt-8 font-bold text-2xl">Enterprise Evolution</h2>
+                <Line data={enterpriseChartData} options={lineChartOptions} />
+              </>
             )}
           </div>
         </div>

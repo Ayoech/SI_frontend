@@ -55,7 +55,7 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
         </li>
         <li className='sidebar-list-item ' style={{color: 'grey'}}>
           
-          <Link to ={`/student/Profile`} className="flex items-center">
+          <Link to ={`/entreprise/Profile`} className="flex items-center">
           <TbUser className="icon mr-2" /> Profile
           
           </Link>
