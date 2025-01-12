@@ -362,9 +362,9 @@ export default function ListeEtudiant({ etudiants }) {
                                 <Button variant="contained" color="primary" onClick={()=>handleActivation(row)}>Activer</Button>
                            )};
                         <div className='ml-4 mr-4'>
-                          <Button variant="contained" color="primary" onClick={()=>RecupererPassword(row)}>Supprimer</Button>
+                          <Button variant="contained" color="primary" onClick={()=>RecupererPassword(row)}>Récupérer Mot de passe</Button>
                         </div>
-                        <Button variant="contained" color="primary">Récupérer Mot de passe</Button>
+                        <Button variant="contained" color="primary">Supprimer</Button>
                       </div>
                     </TableCell>
                   </TableRow>

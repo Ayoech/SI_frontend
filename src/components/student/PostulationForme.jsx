@@ -46,14 +46,12 @@ const PostulationForme = ({offerId}) => {
         {({ setFieldValue }) => (
           <Form>
             <div className="mb-4">
-              <label htmlFor="lettre_motivation" className="block text-sm font-medium text-gray-700">
-                Lettre de Motivation
-              </label>
+              
               <Field
                 as="textarea"
                 id="lettre_motivation"
                 name="lettre_motivation"
-                className="w-full border-gray-300 rounded-md p-2 mt-1"
+                className="w-full border border-black rounded-md p-2 mt-1"
                 rows="6"
               />
               <ErrorMessage name="lettre_motivation" component="div" className="text-red-500 text-sm mt-1" />

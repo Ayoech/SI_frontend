@@ -1,12 +1,16 @@
 import React from 'react'
 import BOX from '../BOX'
 import { BoxOffre } from '../BoxOffre'
-import { useState , useEffect} from 'react'
+import { useState , useEffect} from 'react';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const ListeOffres = ({selectedOfferId,setSelectedOfferId,toggleOffreBox,showOffre,offres,togglePostulationForme}) => {
 
   //const [selectedOfferId, setSelectedOfferId] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const offersPerPage = 3;
 
   useEffect(() => {
     if (selectedOfferId !== null) {
@@ -19,7 +23,7 @@ const ListeOffres = ({selectedOfferId,setSelectedOfferId,toggleOffreBox,showOffr
   const handleBoxClick = (offerId) => {
     setSelectedOfferId(offerId);
     toggleOffreBox(true);
-    console.log('testing: ',showOffre && selectedOffer)
+    
   };
 
   useEffect(() => {
@@ -27,6 +31,14 @@ const ListeOffres = ({selectedOfferId,setSelectedOfferId,toggleOffreBox,showOffr
     console.log('selectedOffer:', selectedOffer);
     console.log('slectedOfferId: ',selectedOfferId)
   }, [selectedOffer, showOffre]);
+
+  const indexOfLastOffer = currentPage * offersPerPage;
+  const indexOfFirstOffer = indexOfLastOffer - offersPerPage;
+  const currentOffers = offres.slice(indexOfFirstOffer, indexOfLastOffer);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
   /*const handlePostulerClick = (offerId) => {
     togglePostulationForme(); 
   };*/
@@ -35,13 +47,22 @@ const ListeOffres = ({selectedOfferId,setSelectedOfferId,toggleOffreBox,showOffr
     return (
         <div className="p-4 flex flex-col lg:flex-row gap-4">
           <div style={{width:'40%'}}>
-          {offres.map((offre)=>(<BOX
+          {currentOffers.map((offre)=>(<BOX
             title={offre.TITRE}
             company={offre.NOM_ENTREPRISE}
             location="Remote"
             type="Temps plein"
             handleBoxClick={() => handleBoxClick(offre.NUM_OFFRE)}
           />))}
+          <div className="p-4">
+        <Stack spacing={2} className="flex justify-center">
+          <Pagination count={Math.ceil(offres.length / offersPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded" />
+        </Stack>
+      </div>
           </div>
           <div className='flex-1 '>
             {showOffre && selectedOffer &&(  <BoxOffre 
@@ -53,6 +74,7 @@ const ListeOffres = ({selectedOfferId,setSelectedOfferId,toggleOffreBox,showOffr
             />)}
            
           </div>
+          
         </div>
       )
 }

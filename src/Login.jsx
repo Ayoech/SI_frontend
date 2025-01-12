@@ -88,7 +88,14 @@ function Login() {
                 required
               />
             </div>
-            <button type='submit' className='login-btn' onClick={handleLogin} disabled={loading}>
+            <button type='submit' className='login-btn mb-2' style={{
+        position: 'relative',
+        
+       
+        justifyContent: 'center',
+        
+        
+      }} onClick={handleLogin} disabled={loading}>
               {loading?<Spinner/>:'Login'}
             </button>
           </form>
