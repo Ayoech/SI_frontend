@@ -74,10 +74,12 @@ const CreateOffer = () => {
     }
   };
 
-  const handleQualificationChange = (e) => {
-    // Handle the change of qualification input
-    const { value } = e.target;
-    setQualificationInput(value);
+  const handleQualificationChange = (index,value) => {
+    setOfferData((prevData) => {
+      const updatedQualifications = [...prevData.qualifications];
+      updatedQualifications[index] = value;
+      return { ...prevData, qualifications: updatedQualifications };
+    });
   };
 
   const handleAddQualificationFromInput = () => {
@@ -138,7 +140,7 @@ const CreateOffer = () => {
   
     const payload = {
       ...offerData,
-      numUtilisateur,
+      
     };
   
     try {
@@ -308,11 +310,11 @@ const CreateOffer = () => {
             <p className='mb-2 pb-2 text-xl font-semibold'>Add qualifications (3 to 5):</p>
             {offerData.qualifications.map((qualification, index) => (
               <div key={index} className='qualif-grid'>
-                {qualification}
+                
                 <input
                 type="text"
                 placeholder={`Qualification ${index + 1}`}
-                onChange={handleQualificationChange}
+                onChange={(e) => handleQualificationChange(index, e.target.value)}
                 className="mt-1 p-2 w-full border border-gray-300 rounded mr-2"
                 style={{ width: '400px' }}
               />

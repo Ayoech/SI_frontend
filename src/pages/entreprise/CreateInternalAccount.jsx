@@ -41,21 +41,15 @@ const GestionnaireList = () => {
     }
   };
 
-  const handleDelete = async (nom) => {
+  const handleDelete = async (num_ge) => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const userId = user?.userId; // Extract userId from local storage
-  
-      if (!userId) {
-        console.error("userId not found in local storage.");
-        return;
-      }
+      
   
       const response = await axios.delete(`http://localhost:3000/api/v1/entreprise/deletegestionnaire`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        data: { userId, nom }, // Send the `userId` and `nom` in the request body
+        data: { num_ge }, // Send the `userId` and `nom` in the request body
       });
   
       if (response.status === 200) {
@@ -109,13 +103,13 @@ const GestionnaireList = () => {
               </thead>
               <tbody>
                 {gestionnaires.map((gestionnaire, index) => (
-                  <tr key={index}>
+                  <tr key={gestionnaire.NUM_GE}>
                     <td className="border text-center px-4 py-2">{gestionnaire.NOM}</td>
                     <td className="border text-center px-4 py-2">{gestionnaire.PRENOM}</td>
                     <td className="border text-center px-4 py-2">
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded"
-                        onClick={() => handleDelete(gestionnaire.NOM)}
+                        onClick={() => handleDelete(gestionnaire.NUM_GE)}
                       >
                         Delete
                       </button>
