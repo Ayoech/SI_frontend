@@ -11,12 +11,15 @@ const OfferDetails = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);  // For modal visibility
   const [selectedApplicant, setSelectedApplicant] = useState(null);  // For selected applicant's letter
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [totalPages, setTotalPages] = useState(1); // Track total pages
 
   // Fetch applicants
   useEffect(() => {
     const loadApplicants = async () => {
       try {
-        const responseData = await fetchApplicants(offerId);
+        
+        const responseData = await fetchApplicants(offerId, currentPage);
         if (responseData.success) {
           const formattedApplicants = responseData.data.map((applicant) => ({
             id: applicant.NUM_POSTULATION,
@@ -27,6 +30,7 @@ const OfferDetails = () => {
             status: "Pending",
           }));
           setApplicants(formattedApplicants);
+          setTotalPages(responseData.totalPages); // Set total pages from response
         }
       } catch (error) {
         console.error("Failed to load applicants:", error.message);
@@ -34,7 +38,7 @@ const OfferDetails = () => {
     };
 
     loadApplicants();
-  }, [offerId]);
+  }, [offerId, currentPage]); // Dependency array includes currentPage
 
   // Sidebar toggle
   const OpenSidebar = () => {
@@ -53,17 +57,27 @@ const OfferDetails = () => {
     setSelectedApplicant(null);
   };
 
+  // Handle pagination buttons
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
-        className={`flex justify-center items-start ${
-          openSidebarToggle ? "ml-[56rem] mt-[4rem] pt-[0.1rem]" : "ml-[16rem]"
-        }`}
+        className={`flex justify-center items-start ${openSidebarToggle ? "ml-[56rem] mt-[4rem] pt-[0.1rem]" : "ml-[16rem]"}`}
       >
         <div className="rounded-lg p-8 mt-28 ml-36 max-w-6xl">
-          
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-left">
               <thead>
@@ -100,7 +114,7 @@ const OfferDetails = () => {
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"
                           >
-                            View 
+                            View
                           </a>
                         ) : (
                           "Not Available"
@@ -137,6 +151,25 @@ const OfferDetails = () => {
                 )}
               </tbody>
             </table>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrevPage}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>Page {currentPage} of {totalPages}</span>
+              <button
+                onClick={handleNextPage}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

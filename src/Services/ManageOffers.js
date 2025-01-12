@@ -1,26 +1,30 @@
-import axios from'axios';
+import axios from 'axios';
 
+const ManageOffersService = async (page = 1, limit = 3) => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+    
+    console.log("user:", user, "token:", token);
+    console.log(user.userId);
 
-const ManageOffersService = async() =>  {
+    // Fetch paginated offers based on userId, page, and limit
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/entreprise/alloffers/${user.userId}`, {
+      params: {
+        page: page,   // Pass the page number
+        limit: limit, // Set the limit to 3 offers per page (or any value passed to the function)
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    try{
-        const user = JSON.parse(localStorage.getItem("user"));
-        const token = localStorage.getItem("token");
-        console.log('is there a problem')
-        console.log("user:", user, "token:", token);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/entreprise/alloffers`,{
-            params: { num_utilisateur:user.userId },
-            headers: {
-                Authorization: `Bearer ${token}` 
-            }
-        });
-        console.log('yeah there is a problem')
-        return response.data;
-    }catch(error){
-        console.error("une erreur est survenue lors de la recherche des données de postulation pour l'étudiant", error);
-        throw new Error("une erreur est survenue lors de la recherche des données de postulation pour l'étudiant");
-    }
-
-}
+    // Assuming the response contains paginated data
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching offers:", error);
+    throw new Error("Error fetching offers");
+  }
+};
 
 export default ManageOffersService;
