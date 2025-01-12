@@ -16,10 +16,12 @@ import Conventions from './pages/Ecole/Conventions.jsx';
 import Entreprise from './pages/Ecole/Entreprise.jsx';
 import ManageOffers from './pages/entreprise/ManageOffers.jsx';
 import Gestionnaire from './pages/entreprise/Gestionnaire.jsx';
-import Statistics from './components/ecole/Statistics.jsx';
+import Statistics from './components/ecole/DomainStatistics.jsx';
 import Offers from './pages/entreprise/Offers.jsx';
 import OfferDetails from './OfferDetails.jsx';
 import EntrepriseProfile from './pages/entreprise/EntrepriseProfile.jsx';
+import EnterpriseEvolutionChart from './pages/Ecole/EnterpriseEvolutionChart.jsx';
+import DomainStatistics from './components/ecole/DomainStatistics.jsx';
 
 function App() {
   return (
@@ -42,9 +44,10 @@ function App() {
         <Route path='/ecole/conventions' element={<Conventions />} />
         <Route path='/ecole/entreprises' element={<Entreprise />} />
         <Route path='/entreprise/gestform' element={<Gestionnaire />} />
-        <Route path='/ecole/statistics' element={<Statistics />} />
+        <Route path='/ecole/statistics' element={<DomainStatistics />} />
         <Route path="/offer-details/:offerId" element={<OfferDetails />} />
         <Route path='/entreprise/Profile' element={<EntrepriseProfile />} />
+       
         
       </Routes>
     </Router>

@@ -50,6 +50,7 @@ function EcoleSidebar({ openSidebarToggle, OpenSidebar }) {
           <Link to={'/ecole/statistics'} className="flex items-center">
             <FaComment className='icon mr-2' /> Statistics
           </Link>
+
           
         </li>
         <li className='sidebar-list-item ' style={{color: 'grey'}} >
