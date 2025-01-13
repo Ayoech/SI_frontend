@@ -1,17 +1,50 @@
 import React, { useState } from 'react'
+import insert_TagsService from '../../Services/Insert_TagsService';
+import { useNavigate } from 'react-router-dom';
 
 const Tags = () => {
     const [offerData,setOfferData]=useState({
         tags:[],
-    })
+    });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleTagChange = (tagId) => {
-        setOfferData((prevData) => {
+      setOfferData((prevData) => {
           const tags = prevData.tags.includes(tagId)
-            ? prevData.tags.filter((t) => t !== tagId)
-            : [...prevData.tags, tagId];
-          return { ...prevData, tags: tags.slice(0, 3) }; 
-        });
+              ? prevData.tags.filter((t) => t !== tagId)
+              : [...prevData.tags, tagId];
+              if (tags.length > 5) {
+                setError('You can only select up to 3 tags.');
+                return prevData; 
+              } else {
+                setError(''); 
+                return { ...prevData, tags };
+              } 
+      });
+  };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (offerData.tags.length < 1) {
+          setError('Please select at least one tag.');
+          return;
+      }
+        setError('');
+        setLoading(true);
+        try{
+            await insert_TagsService(offerData);
+            setSuccess(true);
+            setTimeout(() => setSuccess(false), 3000);
+            navigate('/student/Profile');
+        }catch(error) {
+          console.error(error);
+          setError('Failed to insert tags. Please try again.');
+        }finally {
+          setLoading(false);
+        }
       };
       
     const availableTags=[
@@ -44,8 +77,9 @@ const Tags = () => {
       ];
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-gray-500">
-        <div className='mb-4 pb-4 bg-white p-8 rounded-lg shadow-lg max-w-lg w-full'> 
-            <p className='mb-2 pb-2 text-xl font-semibold'>Select up to 3 tags and minimum 1:</p>
+        <div className='mt-16 mb-4 pb-4 bg-white p-8 rounded-lg shadow-lg  ' style={{width:'1000px'}}> 
+            <p className='mb-2 pb-2 text-xl font-semibold'>Vous pouvez sélectionner de 1 à 5 tags:</p>
+            <div className="flex flex-wrap">
             {availableTags.map((tag) => (
             <button
               type="button"
@@ -60,6 +94,15 @@ const Tags = () => {
             {tag.name}
             </button>
           ))}
+          </div>
+          {error && <p className="text-red-500 mt-4">{error}</p>}
+          {success && <p className="text-green-500 mt-4">Enregistrement a été fait avec succès!</p>}
+          <button
+            type="submit"
+            onClick={(event) => handleSubmit(event)}
+            className="px-4 py-2 rounded text-white bg-black"
+            disabled={loading}
+          >{loading ? 'Enregistrement...' : 'Enregistrer'}</button>
           {/*<p>Selected tags: {offerData.tags.map((id) => availableTags.find((tag) => tag.id === id)?.name).join(', ')}</p>*/}
           </div>
     </div>

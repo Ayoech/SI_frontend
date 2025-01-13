@@ -197,7 +197,7 @@ export default function ListePostulation({postulations} ) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = React.useState(false)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
