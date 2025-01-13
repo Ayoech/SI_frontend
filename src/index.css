@@ -249,7 +249,7 @@ li {
 /* Sidebar  */
 #sidebar {
   grid-area: sidebar;
-  height: 1000px;
+  height: 1100px;
   width:230px;
   overflow-y: auto;
   transition: all 0.5s;

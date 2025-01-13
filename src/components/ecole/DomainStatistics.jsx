@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import Header from '../../Header';
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -32,8 +31,10 @@ const DomainStatistics = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
   const [domainChartData, setDomainChartData] = useState(null);
   const [enterpriseChartData, setEnterpriseChartData] = useState(null);
+  const [tagChartData, setTagChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedTag, setSelectedTag] = useState('');
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -47,13 +48,13 @@ const DomainStatistics = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
+        console.log('Domain Statistics Response:', response); // Debugging line
 
         if (!response.data || !Array.isArray(response.data.data)) {
           throw new Error('Invalid data format received from API');
         }
 
         const data = response.data.data;
-
         const totalCount = data.reduce((sum, item) => sum + item.COUNT, 0);
         const labels = data.map((item) => item.DOMAINE || 'Unknown');
         const percentages = data.map((item) => ((item.COUNT / totalCount) * 100).toFixed(2));
@@ -85,8 +86,8 @@ const DomainStatistics = () => {
           ],
         });
       } catch (err) {
-        setError('Failed to fetch domain statistics.');
         console.error('Error fetching domain statistics:', err);
+        setError('Failed to fetch domain statistics.');
       } finally {
         setLoading(false);
       }
@@ -99,9 +100,9 @@ const DomainStatistics = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
+        console.log('Enterprise Evolution Response:', response); // Debugging line
 
         const data = response.data.data;
-
         let cumulativeTotal = 0;
         const processedData = data.map(([date, count]) => {
           cumulativeTotal += count;
@@ -121,14 +122,42 @@ const DomainStatistics = () => {
           ],
         });
       } catch (err) {
-        setError('Failed to fetch enterprise evolution data.');
         console.error('Error fetching enterprise evolution data:', err);
+        setError('Failed to fetch enterprise evolution data.');
       }
     };
 
     fetchDomainStatistics();
     fetchEnterpriseEvolution();
   }, []);
+
+  const handleTagSelect = async (tagName) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/v1/ecole/tag-count/${tagName}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      console.log('Tag Statistics Response:', response); // Debugging line
+
+      const data = response.data.data;
+      setTagChartData({
+        labels: [tagName],
+        datasets: [
+          {
+            label: `${tagName} Offers`,
+            data: data[0], // Assuming the count is the first item in the array
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (err) {
+      console.error(`Error fetching data for ${tagName}:`, err);
+      setError(`Failed to fetch data for ${tagName}`);
+    }
+  };
 
   const barChartOptions = {
     responsive: true,
@@ -142,11 +171,13 @@ const DomainStatistics = () => {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value) => `${value}%`,
+          // Removing percentage formatting
+          callback: (value) => `${value}`, // Just show the number (not percentage)
         },
       },
     },
   };
+  
 
   const lineChartOptions = {
     responsive: true,
@@ -174,7 +205,7 @@ const DomainStatistics = () => {
   };
 
   return (
-    <div className='grid-container'>
+    <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
       <EcoleSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
@@ -182,8 +213,8 @@ const DomainStatistics = () => {
           openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'
         }`}
       >
-        <div className='rounded-lg p-24 max-w-6xl'>
-          <h2 className="text-center mb-8 font-bold text-2xl">Domain Statistics</h2>
+        <div className="rounded-lg p-24 max-w-6xl">
+          
           <div style={{ width: '600px', margin: '0 auto' }}>
             {loading ? (
               <p>Loading...</p>
@@ -191,9 +222,39 @@ const DomainStatistics = () => {
               <p className="text-red-500">{error}</p>
             ) : (
               <>
-                <Bar data={domainChartData} options={barChartOptions} />
+                
                 <h2 className="text-center mt-8 font-bold text-2xl">Enterprise Evolution</h2>
-                <Line data={enterpriseChartData} options={lineChartOptions} />
+                {enterpriseChartData ? (
+                  <Line data={enterpriseChartData} options={lineChartOptions} />
+                ) : (
+                  <p>No enterprise evolution data available.</p>
+                )}
+                <h2 className="text-center mt-8 font-bold text-2xl">Tag Statistics</h2>
+                <div className="flex justify-center mb-4">
+                  <select
+                    value={selectedTag}
+                    onChange={(e) => {
+                      const tagName = e.target.value;
+                      setSelectedTag(tagName);
+                      handleTagSelect(tagName);
+                    }}
+                    className="p-2 border border-gray-300 rounded"
+                  >
+                    <option value="">Select Tag</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Artificial Intelligence Engineer">Artificial Intelligence Engineer</option>
+                    <option value="Deep Learning Engineer">Deep Learning Engineer</option>
+                    <option value="DevOps Engineer">DevOps Engineer</option>
+                  </select>
+                </div>
+                {tagChartData ? (
+                  <Bar data={tagChartData} options={barChartOptions} />
+                ) : (
+                  <p>No data for selected tag.</p>
+                )}
               </>
             )}
           </div>
