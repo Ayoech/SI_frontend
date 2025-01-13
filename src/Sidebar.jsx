@@ -18,7 +18,14 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
   console.log("Email value in Sidebar:", email.email);
 
   return (
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""}>
+    <aside id="sidebar"  className={`fixed top-0 left-0 h-full w-[240px] bg-gray-100 shadow-lg ${openSidebarToggle ? "sidebar-responsive" : ""}`}  style={{
+      position: "fixed",
+      top: "0",
+      left: "0",
+      height: "100vh", // Ensure it takes full viewport height
+      overflowY: "auto", // Allow scrolling if needed
+      zIndex: 1000, // Keep it on top
+    }}>
       <div className='sidebar-title'>
         <div className='sidebar-brand'>
        

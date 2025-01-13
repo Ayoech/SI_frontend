@@ -81,7 +81,7 @@ const GestionnaireList = () => {
       >
         <Link to="/entreprise/gestform">
         <button style= {{marginLeft: "20px",marginTop:"80px",  padding:"10px", width:"140px"}}className="bg-blue-500 text-white px-28 py-8 mt-52 ml-64 rounded hover:bg-blue-600">
-            Create manager
+            Ajouter 
           </button >
           </Link>
         <div className="container mx-auto p-6 " style={{width: "600px", marginTop: "90px"}}>

@@ -8,22 +8,20 @@ const ManageOffers = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(true);
   const [offres, setOffres] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1); // Track the current page
-  const [totalPages, setTotalPages] = useState(1); // Track the total number of pages
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDescription, setSelectedDescription] = useState('');
 
-  const num_utilisateur = 69; // Example user ID
-
-  // Open or close sidebar
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
-  // Fetch offers with pagination
   const getOffers = async () => {
     try {
-      const response = await ManageOffersService(page, 3); // Fetch with 3 results per page
+      const response = await ManageOffersService(page, 3);
       setOffres(response.data);
-      setTotalPages(response.totalPages); // Assuming the backend returns the total pages
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.error('Error fetching offers:', error);
     } finally {
@@ -31,9 +29,13 @@ const ManageOffers = () => {
     }
   };
 
-  // Handle page change (next/prev)
   const handlePageChange = (newPage) => {
     setPage(newPage);
+  };
+
+  const handleViewFull = (description) => {
+    setSelectedDescription(description);
+    setShowModal(true);
   };
 
   useEffect(() => {
@@ -45,7 +47,9 @@ const ManageOffers = () => {
       <Header OpenSidebar={OpenSidebar} />
       <Sideent openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
       <div
-        className={`flex justify-center items-start ${openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'}`}
+        className={`flex justify-center items-start ${
+          openSidebarToggle ? 'ml-[56rem] mt-[4rem] pt-[0.1rem]' : 'ml-[16rem]'
+        }`}
       >
         <div className="rounded-lg p-24 mt-8 ml-28">
           {loading ? (
@@ -72,9 +76,26 @@ const ManageOffers = () => {
                             {offer.NUM_OFFRE}
                           </Link>
                         </td>
-                        <td className="border text-center border-gray-300 px-4 py-2">{offer.DESCRIPTION}</td>
-                        <td className="border text-center border-gray-300 px-4 py-2">{offer.DATE_DEBUT.split('T')[0]}</td>
-                        <td className="border border-gray-300 text-center px-4 py-2">{offer.DATE_FIN.split('T')[0]}</td>
+                        <td className="border text-center border-gray-300 px-4 py-2">
+  {offer.DESCRIPTION.length > 50
+    ? `${offer.DESCRIPTION.slice(0, 50)}...`
+    : offer.DESCRIPTION}
+  {offer.DESCRIPTION.length > 50 && (
+    <button
+      className="text-blue-500 ml-2 hover:underline"
+      onClick={() => handleViewFull(offer.DESCRIPTION)}
+    >
+      View Full
+    </button>
+  )}
+</td>
+
+                        <td className="border text-center border-gray-300 px-4 py-2">
+                          {offer.DATE_DEBUT.split('T')[0]}
+                        </td>
+                        <td className="border border-gray-300 text-center px-4 py-2">
+                          {offer.DATE_FIN.split('T')[0]}
+                        </td>
                         <td className="border border-gray-300 text-center px-4 py-2">{offer.ETAT_OFFRE}</td>
                         <td className="border border-gray-300 text-center px-4 py-2">
                           <button
@@ -90,7 +111,9 @@ const ManageOffers = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6" className="text-center py-4">No offers available</td>
+                      <td colSpan="6" className="text-center py-4">
+                        No offers available
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -118,6 +141,22 @@ const ManageOffers = () => {
           )}
         </div>
       </div>
+
+      {/* Modal for Full Description */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+            <h2 className="text-lg font-semibold mb-4">Full Description</h2>
+            <p>{selectedDescription}</p>
+            <button
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
