@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginService } from './Services/LoginService';
 import Spinner from './components/Spinner';
+import CheckIfEtudiantHasTags from './Services/CheckIfEtudiantHasTags';
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -36,9 +37,16 @@ function Login() {
               if (role === 'A_ECOLE') {
                   navigate('/ecole/etudiants');
               } else if (role === 'A_ENTREPRISE') {
-                  navigate('/entreprise');
+                    navigate('/entreprise');
               } else if(role === 'ETUDIANT'){
+                const result = await CheckIfEtudiantHasTags();
+                const reponse = result.data;
+                console.log('res: ',result)
+                if(reponse==false){
+                  navigate('/etudiant/tags')
+                }else{
                   navigate('/student/Profile');
+                }
               }
               else if(role === 'G_ENTREPRISE'){
                 navigate('/entreprise');

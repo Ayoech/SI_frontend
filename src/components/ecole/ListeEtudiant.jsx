@@ -80,6 +80,12 @@ const headCells = [
     label: 'Email',
   },
   {
+    id: 'promo',
+    numeric: false,
+    disablePadding: false,
+    label: 'Promo',
+  },
+  {
     id: 'statut',
     numeric: false,
     disablePadding: false,

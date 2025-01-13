@@ -27,11 +27,7 @@ function Sideent({ openSidebarToggle, OpenSidebar }) {
       </div>
 
       <ul className='sidebar-list'>
-        <li className='sidebar-list-item flex items-center' style={{color: 'grey'}}>
-         
-            <BsGrid1X2Fill className='icon mr-2' /> Dashboard
-         
-        </li>
+        
        
         <li className='sidebar-list-item' style={{color: 'black'}}>
          

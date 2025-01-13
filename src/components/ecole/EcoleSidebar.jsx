@@ -27,11 +27,7 @@ function EcoleSidebar({ openSidebarToggle, OpenSidebar }) {
       </div>
 
       <ul className='sidebar-list'>
-        <li className='sidebar-list-item flex items-center' style={{color: 'grey'}}>
-         
-            <BsGrid1X2Fill className='icon mr-2' /> Dashboard
-         
-        </li>
+        
        
         <li className='sidebar-list-item' style={{color: 'black'}}>
          
@@ -61,14 +57,7 @@ function EcoleSidebar({ openSidebarToggle, OpenSidebar }) {
           </Link>
           
         </li>
-        <li className='sidebar-list-item ' style={{color: 'grey'}}>
-          
-          <Link to ={`/student/Profile`} className="flex items-center">
-          <TbUser className="icon mr-2" /> Profile
-          
-          </Link>
-          
-        </li>
+        
       </ul>
     </aside>
   );

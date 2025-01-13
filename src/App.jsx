@@ -22,6 +22,7 @@ import OfferDetails from './OfferDetails.jsx';
 import EntrepriseProfile from './pages/entreprise/EntrepriseProfile.jsx';
 import EnterpriseEvolutionChart from './pages/Ecole/EnterpriseEvolutionChart.jsx';
 import DomainStatistics from './components/ecole/DomainStatistics.jsx';
+import Tags from './components/student/Tags.jsx';
 
 function App() {
   return (
@@ -47,7 +48,7 @@ function App() {
         <Route path='/ecole/statistics' element={<DomainStatistics />} />
         <Route path="/offer-details/:offerId" element={<OfferDetails />} />
         <Route path='/entreprise/Profile' element={<EntrepriseProfile />} />
-       
+        <Route path='/etudiant/tags' element={<Tags />} />
         
       </Routes>
     </Router>

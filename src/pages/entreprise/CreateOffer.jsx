@@ -184,7 +184,14 @@ const CreateOffer = () => {
     { id: 35, name: 'Data Engineer' },
     { id: 36, name: 'UI/UX Designer' },
     { id: 37, name: 'Cloud Computing Practitioner' },
-    { id: 38, name: 'Cloud Computing Developer' }
+    { id: 38, name: 'Cloud Computing Developer' },
+    { id: 39, name: 'Blockchain Developer'},
+    { id: 40, name:  'Supply Chain Analyst'},
+    { id: 41, name: 'Cybersecurity Analyst'},
+    { id: 42, name: 'IoT Developer'},
+    { id: 43, name: 'IT Consultant'},
+    { id: 44, name: 'Technical Project Manager'},
+    { id: 45, name: 'Quality Assurance Engineer'}
   ];
   
 

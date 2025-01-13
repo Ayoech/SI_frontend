@@ -21,6 +21,10 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import ActiverCompteService from '../../Services/ActiverCompteService';
+import DesactiverCompteService from '../../Services/DesactiverCompteService';
+import RecupererPasswordService from '../../Services/RecupererPasswordService';
+
 
 function createData(num_siret,nom_entreprise,email,telephone,addresse,statut_juridique) {
   return {
@@ -88,6 +92,12 @@ const headCells = [
     disablePadding: false,
     label: 'Forme juridique',
   },
+  {
+    id:'actions',
+    numeric: false,
+    disablePadding: false,
+    label: 'Actions',
+  }
 ];
 
 function EnhancedTableHead(props) {
@@ -260,6 +270,33 @@ export default function ListeEntreprise({entreprises}) {
     setDense(event.target.checked);
   };
 
+  const handleActivation = async(row) =>{
+    try{
+      await ActiverCompteService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
+  const handleDesactivation = async(row) => {
+    try{
+      await DesactiverCompteService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
+  const RecupererPassword = async(row) => {
+    try{
+      await RecupererPasswordService(row.NUM_UTILISATEUR);
+    }catch(error){
+      console.error('an error has occured: ', error);
+      console.log('an error has occured: ', error);
+    }
+  }
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - entreprises.length) : 0;
@@ -323,6 +360,21 @@ export default function ListeEntreprise({entreprises}) {
         <TableCell align="left">{row.TELEPHONE}</TableCell>
         <TableCell align="left">{row.ADDRESSE}</TableCell>
         <TableCell align="left">{row.FORME_JURIDIQUE}</TableCell>
+        <TableCell align="left">
+                    <div className='flex justify-content'>
+                      {row.STATUT_COMPTE === "Activé" ? (
+                              < Button variant="contained" color="secondary" onClick={()=>handleDesactivation(row)}>
+                                Désactiver
+                              </Button>
+                             ) : (
+                                <Button variant="contained" color="primary" onClick={()=>handleActivation(row)}>Activer</Button>
+                           )};
+                        <div className='ml-4 mr-4'>
+                          <Button variant="contained" color="primary" onClick={()=>RecupererPassword(row)}>Récupérer Mot de passe</Button>
+                        </div>
+                        <Button variant="contained" color="primary">Supprimer</Button>
+                      </div>
+                    </TableCell>
       </TableRow>
     );
   })}
